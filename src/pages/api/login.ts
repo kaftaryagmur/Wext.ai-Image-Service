@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 // Bu örnekte bir kullanıcı verisi sabit olarak tanımlanmıştır
 const mockUser = {
   email: 'user@example.com',
-  password: 'password123', // Gerçek uygulamalarda şifreler hashlenmiş olmalıdır
+  password: 'password123', 
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
