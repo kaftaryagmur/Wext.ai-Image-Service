@@ -1,11 +1,15 @@
 .app-auth-sign-in {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   display: flex;
   justify-content: flex-end; /* İçeriği sağ tarafa hizalar */
   align-items: center; /* Yükseklik boyunca ortalar */
   height: 100vh; /* Ekran yüksekliğini kaplar */
   position: relative;
   padding: 0 20px; /* Sağ ve sol kenar boşlukları ekler */
+}
+.app-title{
+  background: url(../images/neptune.png) no-repeat;
 }
 
 .app-auth-background {
@@ -32,7 +36,7 @@
   margin-right: 0; /* Sağ kenar boşluğunu sıfırlar */
 }
 
-.auth-fail{
+.auth-fail {
   color: red;
   padding: 0px;
   margin: 15px 15px 15px 0;
@@ -71,6 +75,11 @@
   border: 1px solid #e3e6ea;
 }
 
+.form-control::placeholder{
+  color: #909aa7;
+  font-family: 'Poppins', sans-serif;
+}
+
 .btn-primary {
   width: 30%;
   background-color: #007bff;
@@ -79,8 +88,16 @@
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+
 }
 
 .btn-primary:hover {
   background-color: #0056b3;
+}
+
+.username-title {
+  margin-bottom: 8px;
+  font-family: 'Poppins', sans-serif;
+    color: #40475c;
 }

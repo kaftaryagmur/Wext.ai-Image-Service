@@ -1,83 +1,105 @@
-import { useState } from 'react';
 import {
-  Box,
-  Button,
   FormControl,
   FormLabel,
   Input,
-  Text,
-  Heading,
+  Button,
   Stack,
-} from '@chakra-ui/react';
+  Text,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import styles from "../styles/login.module.css"
 
 interface LoginFormProps {
-  onSubmit: (username: string, password: string) => void;
-  errorMessage?: string;
+  onSubmit: (email: string, password: string) => void;
+  errorMessage?: string; //undefined
+}
+
+interface LoginResponse {
+  message: string;
+}
+
+interface LoginVariables {
+  email: string;
+  password: string;
 }
 
 const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(username, password);
+    onSubmit(email, password);
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      backgroundImage="url('https://wext.ai/html/assets/images/screens/hero-illustration.webp')"
-      backgroundPosition="center"
-      backgroundSize="cover"
-    >
-      <Box
-        width={{ base: '100%', md: '650px' }}
-        padding="80px"
-        backgroundColor="white"
-        boxShadow="lg"
-        borderRadius="md"
-      >
-        <Heading mb={6} textAlign="center" color="#40475c">
-          <a href="/">Wext.ai Interface Test</a>
-        </Heading>
-        <Text mb={6} color="#909aa7" textAlign="center">
-          Please sign-in to your account and continue to the dashboard.
-        </Text>
-        <form onSubmit={handleSubmit}>
-          <Stack spacing={4}>
-            <FormControl id="username">
-              <FormLabel>Username</FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                placeholder="●●●●●●●●"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </FormControl>
-            {errorMessage && <Text color="red.500" textAlign="center">{errorMessage}</Text>}
-            <Button colorScheme="blue" width="full" type="submit">
-              Sign In
-            </Button>
-          </Stack>
-        </form>
-      </Box>
-    </Box>
+    <form onSubmit={handleSubmit}>
+      <Stack spacing={4}>
+        <FormControl id="email">
+          <FormLabel className={styles['username-title']}>Username</FormLabel>
+          <Input
+            type="string"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your username"
+            className={styles['form-control']}
+            required
+          />
+        </FormControl>
+        <FormControl id="password">
+          <FormLabel>Password</FormLabel>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="●●●●●●●●"
+            className={styles['form-control']}
+            required
+          />
+        </FormControl>
+        {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+        <Button colorScheme="blue" width="full" type="submit" className={styles["btn-primary"]}>
+          Sign In
+        </Button>
+      </Stack>
+    </form>
   );
 };
 
-export default LoginForm;
+const LoginFormContainer = () => {
+  const [error, setError] = useState<string | undefined>(undefined);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<LoginResponse, Error, LoginVariables>({
+    mutationFn: async ({ email, password }: LoginVariables) => {
+      // Geçici kullanıcı doğrulama
+      const validEmail = "user@example.com";
+      const validPassword = "password123";
+
+      if (email === validEmail && password === validPassword) {
+        return { message: "Login successful" };
+      } else {
+        throw new Error("Invalid Username or Password!");
+      }
+    },
+    onSuccess: (data: LoginResponse) => {
+      if (data.message === "Login successful") {
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+        window.location.href = "/main";
+      }
+    },
+    onError: (error) => {
+      setError(error.message); // Hata mesajını göster
+    },
+  });
+
+  const handleSubmit = (email: string, password: string) => {
+    mutation.mutate({ email, password });
+  };
+
+  return <LoginForm onSubmit={handleSubmit} errorMessage={error} />;
+};
+
+export default LoginFormContainer;
