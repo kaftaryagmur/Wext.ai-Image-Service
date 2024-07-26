@@ -9,42 +9,43 @@ import {
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import styles from "../styles/login.module.css"
+import styles from "../styles/login.module.css";
 
 interface LoginFormProps {
-  onSubmit: (email: string, password: string) => void;
-  errorMessage?: string; //undefined
+  onSubmit: (username: string, password: string) => void;
+  errorMessage?: string; // undefined
 }
 
 interface LoginResponse {
+  token: string; // JWT token veya benzeri bir veri
   message: string;
 }
 
 interface LoginVariables {
-  email: string;
+  username: string;
   password: string;
 }
 
 const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(email, password);
+    onSubmit(username, password);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing={4}>
-        <FormControl id="email">
-          <FormLabel className={styles['username-title']}>Username</FormLabel>
+        <FormControl id="username">
+          <FormLabel className={styles["username-title"]}>Username</FormLabel>
           <Input
-            type="string"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your username"
-            className={styles['form-control']}
+            className={styles["form-control"]}
             required
           />
         </FormControl>
@@ -55,12 +56,17 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="●●●●●●●●"
-            className={styles['form-control']}
+            className={styles["form-control"]}
             required
           />
         </FormControl>
         {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-        <Button colorScheme="blue" width="full" type="submit" className={styles["btn-primary"]}>
+        <Button
+          colorScheme="blue"
+          width="full"
+          type="submit"
+          className={styles["btn-primary"]}
+        >
           Sign In
         </Button>
       </Stack>
@@ -73,30 +79,33 @@ const LoginFormContainer = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
-    mutationFn: async ({ email, password }: LoginVariables) => {
-      // Geçici kullanıcı doğrulama
-      const validEmail = "user@example.com";
-      const validPassword = "password123";
-
-      if (email === validEmail && password === validPassword) {
-        return { message: "Login successful" };
-      } else {
-        throw new Error("Invalid Username or Password!");
+    mutationFn: async ({ username, password }: LoginVariables) => {
+      try {
+        const response = await axios.post("http://localhost:8000/api/login/", {
+          username,
+          password,
+        });
+        return response.data;
+      } catch (error: any) {
+        const message =
+          error.response?.data?.message || "Invalid Username or Password!";
+        throw new Error(message);
       }
     },
     onSuccess: (data: LoginResponse) => {
       if (data.message === "Login successful") {
+        localStorage.setItem("token", data.token); // Token'ı saklayın
         queryClient.invalidateQueries({ queryKey: ["user"] });
         window.location.href = "/main";
       }
     },
     onError: (error) => {
-      setError(error.message); // Hata mesajını göster
+      setError(error.message);
     },
   });
 
-  const handleSubmit = (email: string, password: string) => {
-    mutation.mutate({ email, password });
+  const handleSubmit = (username: string, password: string) => {
+    mutation.mutate({ username, password });
   };
 
   return <LoginForm onSubmit={handleSubmit} errorMessage={error} />;
