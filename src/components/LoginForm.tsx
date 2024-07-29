@@ -81,21 +81,27 @@ const LoginFormContainer = () => {
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: async ({ username, password }: LoginVariables) => {
       try {
-        const response = await axios.post("http://localhost:8000/api/login/", {
-          username,
-          password,
-        });
+        const response = await axios.post(
+          "http://192.168.5.101:8000/login/",
+          {
+            username,
+            password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         return response.data;
       } catch (error: any) {
-        const message =
-          error.response?.data?.message || "Invalid Username or Password!";
+        const message = error.response?.data?.message || "Network Error";
         throw new Error(message);
       }
     },
     onSuccess: (data: LoginResponse) => {
       if (data.message === "Login successful") {
-        localStorage.setItem("token", data.token); // Token'ı saklayın
-        queryClient.invalidateQueries({ queryKey: ["user"] });
+        localStorage.setItem("token", data.token || ""); // Token'ı saklayın
         window.location.href = "/main";
       }
     },
