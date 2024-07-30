@@ -7,23 +7,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import styles from "../styles/login.module.css";
 
 interface LoginFormProps {
   onSubmit: (username: string, password: string) => void;
-  errorMessage?: string; // undefined
-}
-
-interface LoginResponse {
-  token: string; // JWT token veya benzeri bir veri
-  message: string;
-}
-
-interface LoginVariables {
-  username: string;
-  password: string;
+  errorMessage?: string;
 }
 
 const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
@@ -74,47 +62,4 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
   );
 };
 
-const LoginFormContainer = () => {
-  const [error, setError] = useState<string | undefined>(undefined);
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation<LoginResponse, Error, LoginVariables>({
-    mutationFn: async ({ username, password }: LoginVariables) => {
-      try {
-        const response = await axios.post(
-          "http://192.168.5.101:8000/login/",
-          {
-            username,
-            password,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        return response.data;
-      } catch (error: any) {
-        const message = error.response?.data?.message || "Network Error";
-        throw new Error(message);
-      }
-    },
-    onSuccess: (data: LoginResponse) => {
-      if (data.message === "Login successful") {
-        localStorage.setItem("token", data.token || ""); // Token'ı saklayın
-        window.location.href = "/main";
-      }
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
-
-  const handleSubmit = (username: string, password: string) => {
-    mutation.mutate({ username, password });
-  };
-
-  return <LoginForm onSubmit={handleSubmit} errorMessage={error} />;
-};
-
-export default LoginFormContainer;
+export default LoginForm;

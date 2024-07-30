@@ -1,4 +1,3 @@
-// src/pages/index.tsx
 import Login from '../login/page';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

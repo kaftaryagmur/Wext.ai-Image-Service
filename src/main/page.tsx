@@ -1,20 +1,14 @@
-import { Box, Heading, Text } from '@chakra-ui/react';
+import { Box } from "@chakra-ui/react";
+import Header from "../components/Header";
+import MainContent from "../components/MainContent";
 
-const MainContent = () => {
+const MainPage = () => {
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      backgroundColor="gray.100"
-    >
-      <Box p={6} borderRadius="md" boxShadow="md" backgroundColor="white">
-        <Heading>Welcome to the Main Page</Heading>
-        <Text mt={4}>You are successfully logged in!</Text>
-      </Box>
+    <Box>
+      <Header/>
+      <MainContent/>
     </Box>
   );
 };
 
-export default MainContent;
+export default MainPage;

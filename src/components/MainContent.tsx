@@ -1,18 +1,22 @@
-import { Box, Heading, Text } from '@chakra-ui/react';
+import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 
 const MainContent = () => {
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      backgroundColor="gray.100"
-    >
-      <Box p={6} borderRadius="md" boxShadow="md" backgroundColor="white">
-        <Heading>Welcome to the Main Page</Heading>
-        <Text mt={4}>You are successfully logged in!</Text>
-      </Box>
+    <Box p={4}>
+      <VStack spacing={4} align="start">
+        <Heading as="h1" size="xl">
+          Welcome to the Main Page
+        </Heading>
+        <Text fontSize="lg">
+          This is a placeholder for the main content of your application. You
+          can add more components, content, and styling here.
+        </Text>
+        <Text fontSize="md">
+          Customize this section to suit the needs of your application. This
+          could include user information, notifications, or any other relevant
+          details.
+        </Text>
+      </VStack>
     </Box>
   );
 };

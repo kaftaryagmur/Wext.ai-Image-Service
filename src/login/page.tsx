@@ -1,6 +1,5 @@
-// src/login/page.tsx
 import Head from "next/head";
-import LoginFormContainer from "../components/LoginForm";
+import LoginFormContainer from "../containers/LoginFormContainer";
 import styles from "../styles/login.module.css"; // CSS dosyanızı import edin
 
 export default function LoginPage() {
