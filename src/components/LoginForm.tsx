@@ -48,7 +48,7 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
             required
           />
         </FormControl>
-        {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+        {errorMessage && <Text color="red">{errorMessage}</Text>}
         <Button
           colorScheme="blue"
           width="full"
