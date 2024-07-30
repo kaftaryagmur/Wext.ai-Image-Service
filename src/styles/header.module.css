@@ -1,0 +1,19 @@
+.logo{
+    color:#003764;
+    font-family: system-ui,"Helvetica Neue", sans-serif;
+}
+.btn-primary {
+    width: 5%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  

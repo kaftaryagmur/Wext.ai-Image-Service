@@ -20,11 +20,11 @@ const LoginFormContainer = () => {
   const router = useRouter();
 
   // Geçici yerel kullanıcı doğrulama
-  
+  /*
   const handleLogin = (username: string, password: string) => {
     const localUser = {
-      username: "test@example.com",
-      password: "password",
+      username: "yagmur",
+      password: "123",
     };
 
     if (username === localUser.username && password === localUser.password) {
@@ -34,11 +34,10 @@ const LoginFormContainer = () => {
       // Giriş başarısız, hata mesajını göster
       setError("Invalid Username or Password!");
     }
-  };
-
+  };*/
 
   //Kullanıcı doğrulama
-  /*
+
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: async ({ username, password }: LoginVariables) => {
       try {
@@ -74,8 +73,10 @@ const LoginFormContainer = () => {
   const handleSubmit = (username: string, password: string) => {
     mutation.mutate({ username, password });
   };
-*/
-  return <LoginForm onSubmit={handleLogin/*handleSubmit*/} errorMessage={error} />;
+
+  return (
+    <LoginForm onSubmit={/*handleLogin*/ handleSubmit} errorMessage={error} />
+  );
 };
 
 export default LoginFormContainer;
