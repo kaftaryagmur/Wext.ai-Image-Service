@@ -67,12 +67,13 @@
   font-weight: 500;
 }
 
-.form-control {
+.form-control{
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
   border-radius: 8px;
   border: 1px solid #e3e6ea;
+  font-family: "Poppins-Bold", sans-serif;
 }
 
 .form-control::placeholder {

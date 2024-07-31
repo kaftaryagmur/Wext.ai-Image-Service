@@ -1,6 +1,7 @@
 import styles from "../styles/header.module.css";
-import { Box, Flex, Input, Button, Spacer, Image } from "@chakra-ui/react";
+import { Box, Flex, Button, Image, Spacer } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import SearchBar from './SearchBar'; // Import the SearchBar component
 
 const Header = () => {
   const router = useRouter();
@@ -8,9 +9,13 @@ const Header = () => {
   const handleLogout = () => {
     // Oturum bilgilerini temizleme
     localStorage.removeItem("token"); // veya sessionStorage.removeItem("token");
-
-    // Kullanıcıyı giriş sayfasına yönlendirme
+    // Yönlendirme
     router.push("/");
+  };
+
+  const handleSearch = (query: string) => {
+    // Arama işlevini burada işleyin
+    console.log('Searching for:', query);
   };
 
   return (
@@ -30,20 +35,7 @@ const Header = () => {
         <Spacer />
 
         {/* Search Bar */}
-        <Box display="flex" alignItems="center" flex="1" mx={4}>
-          <Input
-          padding="8px"
-            fontFamily="monospace"
-            placeholder="Search..."
-            bg="white"
-            border="5px solid teal"
-            borderRadius="15px"
-            width="100%"
-            _hover={{ borderColor: "green.400" }}
-            _focus={{ borderColor: "blue.400", boxShadow: "outline" }
-          }
-          />
-        </Box>
+        <SearchBar onSearch={handleSearch} />
 
         {/* Spacer */}
         <Spacer />

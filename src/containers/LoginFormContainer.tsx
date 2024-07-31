@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import LoginForm from "../components/LoginForm";
 import { useRouter } from "next/router";
 
 interface LoginResponse {
-  token: string;
+  token?: string;
   message: string;
 }
 
@@ -16,32 +16,17 @@ interface LoginVariables {
 
 const LoginFormContainer = () => {
   const [error, setError] = useState<string | undefined>(undefined);
-  //const queryClient = useQueryClient();
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  );
   const router = useRouter();
 
-  // Geçici yerel kullanıcı doğrulama
-  /*
-  const handleLogin = (username: string, password: string) => {
-    const localUser = {
-      username: "yagmur",
-      password: "123",
-    };
-
-    if (username === localUser.username && password === localUser.password) {
-      // Giriş başarılı, ana sayfaya yönlendir
-      router.push("/main");
-    } else {
-      // Giriş başarısız, hata mesajını göster
-      setError("Invalid Username or Password!");
-    }
-  };*/
-
-  //Kullanıcı doğrulama
+  // Kullanıcı doğrulama
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: async ({ username, password }: LoginVariables) => {
       try {
         const response = await axios.post(
-          "http://192.168.5.103:8000/api/index/",
+          "http://192.168.5.103:8000/api/login/",
           {
             username,
             password,
@@ -52,29 +37,48 @@ const LoginFormContainer = () => {
             },
           }
         );
-        return response.data;
+        console.log("Response:", response.data); // Yanıtı kontrol etmek için
+        // Yanıtı doğru formata dönüştürme
+        return {
+          token: response.data.token || "",
+          message: response.data.message || "Login successful",
+        };
       } catch (error: any) {
         const message = error.response?.data?.message || "Network Error";
+        console.error("Error:", message); // Hata mesajını kontrol etmek için
         throw new Error(message);
       }
     },
     onSuccess: (data: LoginResponse) => {
+      console.log("onSuccess:", data); // Başarı durumunu kontrol etmek için
       if (data.message === "Login successful") {
         localStorage.setItem("token", data.token || "");
-        window.location.href = "/main";
+        setSuccessMessage("Login successful! Redirecting...");
+        setTimeout(() => {
+          router.push("/main");
+        }, 2000); // 2 seconds delay before redirecting
       }
     },
     onError: (error) => {
+      console.error("onError:", error.message); // Hata durumunu kontrol etmek için
       setError(error.message);
     },
   });
 
   const handleSubmit = (username: string, password: string) => {
+    setError(undefined); // Hata mesajını temizle
+    setSuccessMessage(undefined); // Başarı mesajını temizle
     mutation.mutate({ username, password });
   };
 
   return (
-    <LoginForm onSubmit={/*handleLogin*/ handleSubmit} errorMessage={error} />
+    <div>
+      <LoginForm onSubmit={handleSubmit} />
+      <div style={{ marginTop: "10px" }}>
+        {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </div>
+    </div>
   );
 };
 
