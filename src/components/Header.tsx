@@ -21,7 +21,6 @@ const Header = () => {
   return (
     <Box bg="#e7ecf8" p={4} boxShadow="3px">
       <Flex align="center">
-        {/* Logo */}
         <Box className={styles["logo"]}>
           <Image
             src="/favicon.ico"
@@ -30,14 +29,8 @@ const Header = () => {
             objectFit="contain"
           /> Wext.ai
         </Box>
-
-        {/* Spacer */}
         <Spacer />
-
-        {/* Search Bar */}
         <SearchBar onSearch={handleSearch} />
-
-        {/* Spacer */}
         <Spacer />
 
         {/* Logout Button */}
@@ -51,6 +44,7 @@ const Header = () => {
           width="full"
           type="submit"
           className={styles["btn-primary"]}
+          fontFamily="Poppins-Bold, sans-serif"
         >
           Logout
         </Button>

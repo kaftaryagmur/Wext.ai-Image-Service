@@ -5,8 +5,8 @@ import MainContent from "../components/MainContent";
 const MainPage = () => {
   return (
     <Box>
-      <Header/>
-      <MainContent/>
+      <Header />
+      <MainContent searchQuery={""} />
     </Box>
   );
 };
