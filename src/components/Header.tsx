@@ -1,8 +1,7 @@
 import styles from "../styles/header.module.css";
 import { Box, Flex, Button, Image, Spacer } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import SearchBar from './SearchBar'; // Import the SearchBar component
-
+import SearchBar from "./SearchBar";
 const Header = () => {
   const router = useRouter();
 
@@ -15,7 +14,7 @@ const Header = () => {
 
   const handleSearch = (query: string) => {
     // Arama işlevini burada işleyin
-    console.log('Searching for:', query);
+    console.log("Searching for:", query);
   };
 
   return (
@@ -27,13 +26,12 @@ const Header = () => {
             alt="Logo"
             boxSize="50px"
             objectFit="contain"
-          /> Wext.ai
+          />{" "}
+          Wext.ai
         </Box>
         <Spacer />
         <SearchBar onSearch={handleSearch} />
         <Spacer />
-
-        {/* Logout Button */}
         <Button
           variant="solid"
           size="md"

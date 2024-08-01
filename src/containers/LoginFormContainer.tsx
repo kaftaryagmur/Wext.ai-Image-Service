@@ -38,7 +38,6 @@ const LoginFormContainer = () => {
           }
         );
         console.log("Response:", response.data); // Yanıtı kontrol etmek için
-        // Yanıtı doğru formata dönüştürme
         return {
           token: response.data.token || "",
           message: response.data.message || "Login successful",
@@ -54,14 +53,16 @@ const LoginFormContainer = () => {
       if (data.message === "Login successful") {
         localStorage.setItem("token", data.token || "");
         setSuccessMessage("Login successful! Redirecting...");
+        setError(undefined); // Hata mesajını temizle
         setTimeout(() => {
           router.push("/main");
-        }, 2000); // 2 seconds delay before redirecting
+        }, 1000); // 1 saniye gecikme ile yönlendirme
       }
     },
     onError: (error) => {
       console.error("onError:", error.message); // Hata durumunu kontrol etmek için
       setError(error.message);
+      setSuccessMessage(undefined); // Başarı mesajını temizle
     },
   });
 
