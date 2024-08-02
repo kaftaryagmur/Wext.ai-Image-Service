@@ -1,23 +1,19 @@
-import React, { useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/router';
+// components/PrivateRoute.tsx
+import React from "react";
+import { useRouter } from "next/router";
+import { useAuth } from "../components/AuthProvider";
 
-interface PrivateRouteProps {
-  children: ReactNode;
-}
-
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const isAuthenticated = () => localStorage.getItem('token') !== null;
 
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push('/login');
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
     }
-  }, [router]);
+  }, [isAuthenticated, router]);
 
-  if (!isAuthenticated()) {
-    return null; // Render nothing until authentication is verified
-  }
+  if (!isAuthenticated) return null;
 
   return <>{children}</>;
 };

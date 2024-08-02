@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import LoginForm from "../components/LoginForm";
+import { useAuth } from "../components/AuthProvider";
 
 const MockLoginFormContainer = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
   const router = useRouter();
+  const { login } = useAuth(); // useAuth kancasını kullanarak login işlevini al
 
   const handleLogin = (username: string, password: string) => {
     setError(undefined);
@@ -18,7 +20,7 @@ const MockLoginFormContainer = () => {
     };
 
     if (username === "test" && password === "password") {
-      localStorage.setItem("token", mockResponse.token);
+      login(mockResponse.token); // localStorage yerine login işlevini çağır
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {
         router.push("/main");

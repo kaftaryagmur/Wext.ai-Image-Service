@@ -1,7 +1,7 @@
 import Head from "next/head";
 import LoginFormContainer from "../containers/LoginFormContainer";
 import styles from "../styles/login.module.css"; // CSS dosyanızı import edin
-import MockLoginFormContainer from "@/containers/MockLoginFormContainer";
+//import MockLoginFormContainer from "@/containers/MockLoginFormContainer"; //giriş denemesi için mock user
 
 export default function LoginPage() {
   return (
@@ -18,7 +18,7 @@ export default function LoginPage() {
         <p className={styles["auth-description"]}>
           Please sign in to your account and continue to the dashboard.
         </p>
-        <MockLoginFormContainer /*LoginFormContainer*/ />
+        <LoginFormContainer /> {/*MockLoginFormContainer */}
       </div>
     </div>
   );
