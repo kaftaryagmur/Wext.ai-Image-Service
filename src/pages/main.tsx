@@ -1,10 +1,13 @@
+// pages/main.tsx
+
+import React from "react";
 import { AuthProvider } from "@/components/AuthProvider";
-import MainContent from "../main/page";
+import MainContent from "@/components/MainContent";
 
 const MainPage = () => {
   return (
     <AuthProvider>
-      <MainContent />;
+      <MainContent searchQuery="example query" />
     </AuthProvider>
   );
 };

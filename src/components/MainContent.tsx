@@ -12,10 +12,14 @@ const MainContent = ({ searchQuery }: MainContentProps) => {
   const [photos, setPhotos] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth(); // `loading` durumu eklendi
   const router = useRouter();
 
   useEffect(() => {
+    if (authLoading) return; // `loading` durumu bitene kadar bekleyin
+
+    console.log("isAuthenticated:", isAuthenticated); // Hata ayıklama için
+
     if (!isAuthenticated) {
       router.push("/login");
     } else if (searchQuery) {
@@ -34,15 +38,15 @@ const MainContent = ({ searchQuery }: MainContentProps) => {
 
       loadPhotos();
     }
-  }, [isAuthenticated, searchQuery, router]);
+  }, [isAuthenticated, authLoading, searchQuery, router]);
 
+  if (authLoading) return <Spinner size="xl" />; // `loading` durumunu gösterin
   if (!isAuthenticated) return null;
 
   if (loading) return <Spinner size="xl" />;
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
-    
     <Box p={4}>
       <SimpleGrid columns={[1, 2, 3]} spacing={4}>
         {photos.length > 0 ? (

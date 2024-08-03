@@ -1,24 +1,28 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode";
+
 interface AuthContextType {
   isAuthenticated: boolean;
+  loading: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // Yükleme durumu eklendi
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded: { exp: 500 } = jwtDecode<{ exp: 500 }>(token);
+        const decoded: { exp: number } = jwtDecode<{ exp: number }>(token);
         const currentTime = Math.floor(Date.now() / 1000);
         if (decoded.exp < currentTime) {
           localStorage.removeItem("token");
@@ -35,12 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setIsAuthenticated(false);
     }
+    setLoading(false); // Yükleme durumu tamamlandı
   }, [router]);
 
   const login = (token: string) => {
+    console.log("Login token:", token);
     localStorage.setItem("token", token);
     setIsAuthenticated(true);
-    router.push("/main");
+    router
+      .push("/main")
+      .then(() => console.log("Navigated to main"))
+      .catch((err) => console.error("Navigation error:", err));
   };
 
   const logout = () => {
@@ -50,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
