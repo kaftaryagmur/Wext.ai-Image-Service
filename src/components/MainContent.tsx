@@ -1,69 +1,60 @@
 import { useEffect, useState } from "react";
-import { Box, Image, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
-import { fetchPhotos } from "../api/photos";
+import { Box, SimpleGrid, Image, Text } from "@chakra-ui/react";
 import { useAuth } from "../components/AuthProvider";
 import { useRouter } from "next/router";
+import Header from "../components/Header";
+import SearchResults from "../components/SearchResults";
 
 interface MainContentProps {
-  searchQuery: string;
+  onSearch: (keywords: string[]) => void;
+  searchKeywords: string[];
 }
 
-const MainContent = ({ searchQuery }: MainContentProps) => {
-  const [photos, setPhotos] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const { isAuthenticated, loading: authLoading } = useAuth(); // `loading` durumu eklendi
+const MainContent = ({ onSearch, searchKeywords }: MainContentProps) => {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
+  const [photos, setPhotos] = useState<string[]>([
+    "https://via.placeholder.com/250",
+    "https://via.placeholder.com/250",
+    "https://via.placeholder.com/250",
+    "https://via.placeholder.com/250",
+    "https://via.placeholder.com/250",
+    "https://via.placeholder.com/250"
+  ]);
 
   useEffect(() => {
-    if (authLoading) return; // `loading` durumu bitene kadar bekleyin
+    if (authLoading) return;
 
-    console.log("isAuthenticated:", isAuthenticated); // Hata ayıklama için
+    console.log("isAuthenticated:", isAuthenticated);
 
     if (!isAuthenticated) {
       router.push("/login");
-    } else if (searchQuery) {
-      const loadPhotos = async () => {
-        setLoading(true);
-        setError(undefined);
-        try {
-          const fetchedPhotos = await fetchPhotos(searchQuery);
-          setPhotos(fetchedPhotos);
-        } catch (error) {
-          setError("Failed to fetch photos.");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadPhotos();
     }
-  }, [isAuthenticated, authLoading, searchQuery, router]);
+  }, [isAuthenticated, authLoading, router]);
 
-  if (authLoading) return <Spinner size="xl" />; // `loading` durumunu gösterin
+  if (authLoading) return <Text>Loading...</Text>;
   if (!isAuthenticated) return null;
 
-  if (loading) return <Spinner size="xl" />;
-  if (error) return <Text color="red.500">{error}</Text>;
-
   return (
-    <Box p={4}>
-      <SimpleGrid columns={[1, 2, 3]} spacing={4}>
-        {photos.length > 0 ? (
-          photos.map((photo, index) => (
-            <Image
-              key={index}
-              src={photo}
-              alt={`Photo ${index}`}
-              borderRadius="md"
-              boxSize="250px"
-              objectFit="cover"
-            />
-          ))
-        ) : (
-          <Text>No photos found.</Text>
-        )}
-      </SimpleGrid>
+    <Box>
+      <Header onSearch={onSearch} />
+      {searchKeywords.length > 0 && <SearchResults keywords={searchKeywords} />}
+      {searchKeywords.length === 0 && (
+        <Box p={4}>
+          <SimpleGrid columns={[1, 2, 3]} spacing={4}>
+            {photos.map((photo, index) => (
+              <Image
+                key={index}
+                src={photo}
+                alt={`Photo ${index}`}
+                borderRadius="md"
+                boxSize="250px"
+                objectFit="cover"
+              />
+            ))}
+          </SimpleGrid>
+        </Box>
+      )}
     </Box>
   );
 };

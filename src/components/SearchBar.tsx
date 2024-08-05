@@ -1,48 +1,50 @@
-import { Input, Box, IconButton } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useState, useCallback } from "react";
-import { debounce } from "lodash";
+import { Input, Box, IconButton, Flex, Spinner, Text, Button } from "@chakra-ui/react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
+import axios from 'axios';
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  onSearch: (queries: string[]) => void;
 }
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
-  const [query, setQuery] = useState<string>(""); //kullanıcının arama terimi
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [file, setFile] = useState<File | null>(null);
 
-  // Sunucuya gereksiz isteklerin gönderilmesini engellemek için debouncing
-  const debouncedSearch = useCallback(
-    debounce((searchTerm: string) => {
-      onSearch(searchTerm);
-    }, 300),
-    [onSearch]
-  );
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setQuery(value);
-    if (value.trim() === "") {
-      // Boşsa istek göndermeyi engelle
-      return;
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
     }
-    debouncedSearch(value); // Debounced fonksiyon
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
-    setError(undefined);
-    onSearch(query);
-    setLoading(false);
-  };
+    if (file) {
+      setLoading(true);
+      setError(undefined);
+      const formData = new FormData();
+      formData.append('file', file);
 
-  const handleButtonClick = () => {
-    setLoading(true);
-    setError(undefined);
-    onSearch(query);
-    setLoading(false);
+      try {
+        const token = localStorage.getItem('token'); // Token'ı localStorage'dan alın
+        const response = await axios.post('http://192.168.5.103:8000/api/csvfileupload/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        onSearch(response.data.queries);
+        setFile(null);
+      } catch (err) {
+        setError('Failed to upload file');
+        console.error('Error:', err);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("Please select a CSV file");
+    }
   };
 
   return (
@@ -60,34 +62,42 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       _focusWithin={{ bg: "#009eff" }}
     >
       <Input
-        aria-label="Search photos"
-        placeholder="Search..."
-        bg="white"
-        border="none"
+        type="file"
+        accept=".csv"
+        onChange={handleFileChange}
+        display="none"
+        id="csvFileInput"
+      />
+      <Button
+        as="label"
+        htmlFor="csvFileInput"
+        bg="teal.500"
+        color="white"
         borderRadius="8px"
         padding="8px"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        width="60%"
-        fontFamily="Poppins, sans-serif"
-        _placeholder={{ color: "#aaa" }}
-        _focus={{ borderColor: "transparent", boxShadow: "none" }}
-        value={query}
-        onChange={handleChange}
-        flex="1" // Input genişliği otomatik ayarlansın
-      />
+        marginRight="8px"
+        cursor="pointer"
+        _hover={{ bg: "#009eff" }}
+      >
+        {file ? file.name : "Upload CSV"}
+      </Button>
       <IconButton
         aria-label="Search"
-        icon={<SearchIcon />}
+        icon={loading ? <Spinner size="lg" /> : <SearchIcon />}
         variant="outline"
         colorScheme="teal"
         padding="8px"
         ml={6}
-        onClick={handleButtonClick}
-        _hover={{ bg: "#009eff", color: "white" }} // Hover efekti
-        _active={{ bg: "#003764", color: "white" }} // Aktif durumda renkler
+        type="submit"
+        isDisabled={loading}
+        _hover={{ bg: "#009eff", color: "white" }}
+        _active={{ bg: "#003764", color: "white" }}
       />
+      {error && (
+        <Flex align="center" ml={4}>
+          <Text color="red.500">{error}</Text>
+        </Flex>
+      )}
     </Box>
   );
 };

@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-export const fetchPhotos = async (query: string): Promise<string[]> => {
+export const fetchPhotos = async (query: string): Promise<{ [key: string]: string[] }> => {
   const token = localStorage.getItem('token'); // Token'ı localStorage'dan alın
 
   if (!token) {
@@ -9,7 +8,7 @@ export const fetchPhotos = async (query: string): Promise<string[]> => {
 
   console.log('Sending token:', token); // Hata ayıklama için token'ı loglayın
 
-  const response = await axios.get('/api/getphotos', {
+  const response = await axios.get('/api/getphotos/', {
     params: { query },
     headers: {
       'Authorization': `Bearer ${token}`, // Yetkilendirme başlığını ekleyin
@@ -20,5 +19,5 @@ export const fetchPhotos = async (query: string): Promise<string[]> => {
     throw new Error('Failed to fetch photos');
   }
 
-  return response.data.photos; // API'nizin yanıtına bağlı olarak güncelleyin
+  return response.data;
 };

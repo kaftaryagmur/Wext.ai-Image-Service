@@ -2,12 +2,12 @@
 
 import React from "react";
 import { AuthProvider } from "@/components/AuthProvider";
-import MainContent from "@/components/MainContent";
+import MainContentContainer  from "@/containers/MainContentContainer";
 
 const MainPage = () => {
   return (
     <AuthProvider>
-      <MainContent searchQuery="example query" />
+      <MainContentContainer />
     </AuthProvider>
   );
 };

@@ -2,19 +2,17 @@ import styles from "../styles/header.module.css";
 import { Box, Flex, Button, Image, Spacer } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
-const Header = () => {
+
+interface HeaderProps {
+  onSearch: (keywords: string[]) => void;
+}
+
+const Header = ({ onSearch }: HeaderProps) => {
   const router = useRouter();
 
   const handleLogout = () => {
-    // Oturum bilgilerini temizleme
-    localStorage.removeItem("token"); // veya sessionStorage.removeItem("token");
-    // Yönlendirme
+    localStorage.removeItem("token");
     router.push("/");
-  };
-
-  const handleSearch = (query: string) => {
-    // Arama işlevini burada işleyin
-    console.log("Searching for:", query);
   };
 
   return (
@@ -30,7 +28,7 @@ const Header = () => {
           Wext.ai
         </Box>
         <Spacer />
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={onSearch} />
         <Spacer />
         <Button
           variant="solid"

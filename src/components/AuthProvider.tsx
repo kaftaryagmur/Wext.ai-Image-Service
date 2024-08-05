@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // 'jwtDecode' yerine 'jwt-decode' olarak kullanın
 
 interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
+  token: string | null; // token'ı ekleyin
   login: (token: string) => void;
   logout: () => void;
 }
@@ -15,7 +16,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // Yükleme durumu eklendi
+  const [loading, setLoading] = useState(true); // yükleme durumu eklendi
+  const [token, setToken] = useState<string | null>(null); // token durumu eklendi
   const router = useRouter();
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setIsAuthenticated(false);
           router.push("/login");
         } else {
+          setToken(token); // token'ı ayarlayın
           setIsAuthenticated(true);
         }
       } catch (e) {
@@ -45,6 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = (token: string) => {
     console.log("Login token:", token);
     localStorage.setItem("token", token);
+    setToken(token); // token'ı ayarlayın
     setIsAuthenticated(true);
     router
       .push("/main")
@@ -54,12 +58,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     localStorage.removeItem("token");
+    setToken(null); // token'ı kaldırın
     setIsAuthenticated(false);
     router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, loading, token, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

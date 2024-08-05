@@ -12,12 +12,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isPublicRoute = publicRoutes.includes(router.pathname);
 
-  if (typeof window !== "undefined") {
-    localStorage.setItem(
-      "token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwYXNzd29yZCIsIm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MzU2ODk2MDB9.0C6tNSge9LJ1uK4vHX8FfM4Lr6-vskojLu9X6iUduIM"
-    );
-  }
   return (
     <ChakraProvider>
       <AuthProvider>
