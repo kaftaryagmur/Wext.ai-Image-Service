@@ -2,12 +2,14 @@ import { Input, Box, IconButton, Flex, Spinner, Text, Button } from "@chakra-ui/
 import { ChangeEvent, FormEvent, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from 'axios';
+import { useAuth } from "@/components/AuthProvider"; // useAuth kancasını ekleyin
 
 interface SearchBarProps {
   onSearch: (queries: string[]) => void;
 }
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
+  const { token } = useAuth(); // useAuth kancasından token alın
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File | null>(null);
@@ -27,11 +29,10 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       formData.append('file', file);
 
       try {
-        const token = localStorage.getItem('token'); // Token'ı localStorage'dan alın
         const response = await axios.post('http://192.168.5.103:8000/api/csvfileupload/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`, // useAuth'dan alınan token
           },
         });
         onSearch(response.data.queries);

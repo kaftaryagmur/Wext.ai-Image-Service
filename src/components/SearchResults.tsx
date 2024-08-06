@@ -1,47 +1,56 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  SimpleGrid,
-  Image,
-  Spinner,
-  Text,
-  Checkbox,
-  Button,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, SimpleGrid, Image, Spinner, Text, Checkbox } from "@chakra-ui/react";
 import axios from "axios";
+import { useAuth } from "@/components/AuthProvider";
 
 interface SearchResultsProps {
   keywords: string[];
+  onSelectedPhotosChange: (photos: any[]) => void;
 }
 
-const SearchResults = ({ keywords }: SearchResultsProps) => {
-  const [images, setImages] = useState<{ [key: string]: string[] }>({});
+interface Photo {
+  photo_url: string;
+  photographer: string;
+  query: string;
+}
+
+const SearchResults = ({ keywords, onSelectedPhotosChange }: SearchResultsProps) => {
+  const [images, setImages] = useState<{ [key: string]: Photo[] }>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
+  const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([]);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
         const response = await axios.post(
           "http://192.168.5.103:8000/api/getphotos/",
-          {
-            queries: keywords,
-          },
+          { queries: keywords },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Yetkilendirme başlığını ekleyin
+              Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log("Fetched images:", response.data); // Backend'den gelen verileri loglayın
-        setImages(response.data);
+
+        const photosByQuery: { [key: string]: Photo[] } = {};
+        response.data.forEach((photo: any) => {
+          if (!photosByQuery[photo.query]) {
+            photosByQuery[photo.query] = [];
+          }
+          photosByQuery[photo.query].push({
+            photo_url: photo.photo_url,
+            photographer: photo.photographer,
+            query: photo.query,
+          });
+        });
+
+        setImages(photosByQuery);
       } catch (err) {
         setError("Failed to fetch images");
-        console.error("Error:", err);
+        console.error("Error fetching images:", err);
       } finally {
         setLoading(false);
       }
@@ -50,32 +59,18 @@ const SearchResults = ({ keywords }: SearchResultsProps) => {
     if (keywords.length > 0) {
       fetchImages();
     }
-  }, [keywords]);
+  }, [keywords, token]);
 
-  const handlePhotoSelect = (imgUrl: string) => {
+  useEffect(() => {
+    onSelectedPhotosChange(selectedPhotos);
+  }, [selectedPhotos, onSelectedPhotosChange]);
+
+  const handlePhotoSelect = (photo: Photo) => {
     setSelectedPhotos((prevSelected) =>
-      prevSelected.includes(imgUrl)
-        ? prevSelected.filter((photo) => photo !== imgUrl)
-        : [...prevSelected, imgUrl]
+      prevSelected.some((p) => p.photo_url === photo.photo_url)
+        ? prevSelected.filter((p) => p.photo_url !== photo.photo_url)
+        : [...prevSelected, photo]
     );
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
-      await axios.post(
-        "http://192.168.5.103:8000/api/saveselectedphoto/",
-        { photos: selectedPhotos },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Yetkilendirme başlığını ekleyin
-          },
-        }
-      );
-      alert("Photos saved successfully");
-    } catch (err) {
-      setError("Failed to save photos");
-    }
   };
 
   if (loading) return <Spinner size="xl" />;
@@ -93,41 +88,32 @@ const SearchResults = ({ keywords }: SearchResultsProps) => {
             position="relative"
             p={2}
           >
-            {Array.isArray(images[keyword]) &&
-              images[keyword].map(
-                (
-                  imgUrl,
-                  index // Array check eklendi
-                ) => (
-                  <Box key={index} position="relative" mb={2}>
-                    <Image
-                      src={imgUrl}
-                      alt={`${keyword} image`}
-                      borderRadius="md"
-                      boxSize="250px"
-                      objectFit="cover"
-                      onClick={() => handlePhotoSelect(imgUrl)}
-                    />
-                    <Checkbox
-                      position="absolute"
-                      bottom="5px"
-                      right="5px"
-                      colorScheme="teal"
-                      size="lg"
-                      isChecked={selectedPhotos.includes(imgUrl)}
-                      onChange={() => handlePhotoSelect(imgUrl)}
-                    />
-                  </Box>
-                )
-              )}
+            {images[keyword].map((photo, index) => (
+              <Box key={index} position="relative" mb={2}>
+                <Image
+                  src={photo.photo_url}
+                  alt={`${keyword} image`}
+                  borderRadius="md"
+                  boxSize="250px"
+                  objectFit="cover"
+                  onClick={() => handlePhotoSelect(photo)}
+                />
+                <Checkbox
+                  position="absolute"
+                  bottom="5px"
+                  right="5px"
+                  colorScheme="teal"
+                  size="lg"
+                  isChecked={selectedPhotos.some(
+                    (p) => p.photo_url === photo.photo_url
+                  )}
+                  onChange={() => handlePhotoSelect(photo)}
+                />
+              </Box>
+            ))}
           </Box>
         ))}
       </SimpleGrid>
-      <Flex justifyContent="flex-end" mt={4}>
-        <Button colorScheme="blue" onClick={handleSubmit}>
-          Submit
-        </Button>
-      </Flex>
     </Box>
   );
 };

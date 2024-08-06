@@ -1,4 +1,5 @@
-import { useState } from "react";
+//giriş denemesi için kullanıldı
+/*import { useState } from "react";
 import { useRouter } from "next/router";
 import LoginForm from "../components/LoginForm";
 import { useAuth } from "../components/AuthProvider";
@@ -41,4 +42,4 @@ const MockLoginFormContainer = () => {
   );
 };
 
-export default MockLoginFormContainer;
+export default MockLoginFormContainer;*/

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useAuth } from "../components/AuthProvider";
 import LoginForm from "@/components/LoginForm";
+import { Box, Text } from "@chakra-ui/react";
 
 interface LoginResponse {
   access: string;
@@ -17,6 +18,7 @@ interface LoginVariables {
 
 const LoginFormContainer = () => {
   const [error, setError] = useState<string | undefined>(undefined);
+  const [success, setSuccess] = useState<string | undefined>(undefined);
   const router = useRouter();
   const { login } = useAuth();
 
@@ -29,24 +31,31 @@ const LoginFormContainer = () => {
       return response.data;
     },
     onSuccess: (data: LoginResponse) => {
-      login(data.access);
-      router.push("/main");
+      login(data.access, data.refresh); // Hem access hem de refresh token'ı ile login çağrısı
+      setSuccess("Login successful!");
+      setError(undefined);
+      setTimeout(() => {
+        router.push("/main");
+      }, 1000); // Başarı mesajını göstermek için 1 saniye bekleyin ve ardından yönlendirin
     },
     onError: (error) => {
-      setError(error.message);
+      setError("Invalid username or password!");
+      setSuccess(undefined);
     },
   });
 
   const handleSubmit = (username: string, password: string) => {
     setError(undefined);
+    setSuccess(undefined);
     mutation.mutate({ username, password });
   };
 
   return (
-    <div>
+    <Box>
       <LoginForm onSubmit={handleSubmit} />
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+      {error && <Text color="red" mt={2}>{error}</Text>}
+      {success && <Text color="green" mt={2}>{success}</Text>}
+    </Box>
   );
 };
 

@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { jwtDecode } from "jwt-decode"; // 'jwtDecode' yerine 'jwt-decode' olarak kullanın
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
-  token: string | null; // token'ı ekleyin
-  login: (token: string) => void;
+  token: string | null;
+  login: (access: string, refresh: string) => void;
   logout: () => void;
 }
 
@@ -16,40 +16,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // yükleme durumu eklendi
-  const [token, setToken] = useState<string | null>(null); // token durumu eklendi
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
     if (token) {
       try {
         const decoded: { exp: number } = jwtDecode<{ exp: number }>(token);
         const currentTime = Math.floor(Date.now() / 1000);
         if (decoded.exp < currentTime) {
-          localStorage.removeItem("token");
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
           setIsAuthenticated(false);
+          setToken(null);
           router.push("/login");
         } else {
-          setToken(token); // token'ı ayarlayın
           setIsAuthenticated(true);
+          setToken(token);
         }
       } catch (e) {
-        localStorage.removeItem("token");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
         setIsAuthenticated(false);
+        setToken(null);
         router.push("/login");
       }
     } else {
       setIsAuthenticated(false);
+      setToken(null);
     }
-    setLoading(false); // Yükleme durumu tamamlandı
+    setLoading(false);
   }, [router]);
 
-  const login = (token: string) => {
-    console.log("Login token:", token);
-    localStorage.setItem("token", token);
-    setToken(token); // token'ı ayarlayın
+  const login = (access: string, refresh: string) => {
+    console.log("Login token:", access);
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
     setIsAuthenticated(true);
+    setToken(access);
     router
       .push("/main")
       .then(() => console.log("Navigated to main"))
@@ -57,9 +63,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null); // token'ı kaldırın
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     setIsAuthenticated(false);
+    setToken(null);
     router.push("/login");
   };
 
