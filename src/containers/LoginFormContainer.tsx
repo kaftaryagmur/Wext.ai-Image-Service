@@ -24,7 +24,7 @@ const LoginFormContainer = () => {
 
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: async ({ username, password }: LoginVariables) => {
-      const response = await axios.post("http://192.168.5.103:8000/api/login/", {
+      const response = await axios.post("http://20.52.97.229:8000/api/login/", {
         username,
         password,
       });

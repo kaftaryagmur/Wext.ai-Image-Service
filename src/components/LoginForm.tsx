@@ -11,10 +11,12 @@ import {
   Flex,
   VStack,
   useBreakpointValue,
+  useDisclosure
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { BeatLoader } from "react-spinners";
 
 interface LoginFormProps {
   onSubmit: (username: string, password: string) => void;
@@ -24,10 +26,18 @@ interface LoginFormProps {
 const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(username, password);
+    setLoading(true);
+    try {
+      await onSubmit(username, password);
+    } catch (error) {
+      console.error("Error during form submission:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const leftWidth = useBreakpointValue({ base: "100%", md: "60%" });
@@ -43,7 +53,7 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
         <title>Login</title>
       </Head>
 
-      {/* Sol Taraf: Logo ve Tanıtım Görseli */}
+      {/* Sol Taraf: Tanıtım Görseli */}
       <Box
         flexBasis={leftWidth}
         bg="#e7ecf8"
@@ -71,30 +81,36 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
         justifyContent="center"
         p={10}
       >
-        <VStack spacing={4} align="stretch" width="100%" maxWidth="400px">
-          <Heading as="h2" size="lg" mb={7} textAlign="center">
+        <VStack spacing={4} align="stretch" width="100%" maxWidth="600px">
+          <Heading as="h2" size="lg" mb={10} textAlign="center">
             <Flex
               direction="column"
-              align="center"
+              align="left"
               justify="center"
               height="100%"
               p={4}
             >
               <Link href="/login" passHref>
                 <Flex align="center" mb={4}>
-                  <Image src="/favicon.ico" alt="Logo" boxSize="44px" mr={4} />
-                  <Heading as="h2" fontSize="30px">
+                  <Image src="/favicon.ico" alt="Logo" boxSize="50px" mr={4} />
+                  <Heading as="h2" fontSize="26px" color="#40475c">
                     Wext AI Image Service
                   </Heading>
                 </Flex>
               </Link>
-              <Text fontSize="sm" textAlign="left" color="gray.400" fontWeight="100">
+              <Text
+                fontSize="md"
+                textAlign="left"
+                color="gray.400"
+                fontWeight="400"
+                pt={5}
+              >
                 Please sign-in to your account and continue to the dashboard.
               </Text>
             </Flex>
           </Heading>
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={4}>
+          <form style={{ paddingRight: '10px', paddingLeft: '10px' }} onSubmit={handleSubmit}>
+            <Stack spacing={8}>
               <FormControl id="username">
                 <FormLabel>Username</FormLabel>
                 <Input
@@ -116,8 +132,15 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
                 />
               </FormControl>
               {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-              <Button colorScheme="blue" width="full" type="submit">
-                Sign In
+              <Button
+                colorScheme="blue"
+                width="full"
+                type="submit"
+                isLoading={loading}
+                loadingText="Logging in..."
+                spinner={<BeatLoader size={8} color="white" />}
+              >
+                {loading ? '' : 'Login'}
               </Button>
             </Stack>
           </form>

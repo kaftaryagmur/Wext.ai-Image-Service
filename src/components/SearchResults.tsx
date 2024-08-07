@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Box, SimpleGrid, Image, Spinner, Text, Checkbox } from "@chakra-ui/react";
+import {
+  Box,
+  SimpleGrid,
+  Image,
+  Spinner,
+  Text,
+  Checkbox,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -14,7 +21,10 @@ interface Photo {
   query: string;
 }
 
-const SearchResults = ({ keywords, onSelectedPhotosChange }: SearchResultsProps) => {
+const SearchResults = ({
+  keywords,
+  onSelectedPhotosChange,
+}: SearchResultsProps) => {
   const [images, setImages] = useState<{ [key: string]: Photo[] }>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +36,7 @@ const SearchResults = ({ keywords, onSelectedPhotosChange }: SearchResultsProps)
       setLoading(true);
       try {
         const response = await axios.post(
-          "http://192.168.5.103:8000/api/getphotos/",
+          "http://20.52.97.229:8000/api/getphotos/",
           { queries: keywords },
           {
             headers: {

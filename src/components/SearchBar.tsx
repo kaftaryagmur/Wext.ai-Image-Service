@@ -1,7 +1,15 @@
-import { Input, Box, IconButton, Flex, Spinner, Text, Button } from "@chakra-ui/react";
+import {
+  Input,
+  Box,
+  IconButton,
+  Flex,
+  Spinner,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
-import axios from 'axios';
+import axios from "axios";
 import { useAuth } from "@/components/AuthProvider";
 
 interface SearchBarProps {
@@ -26,20 +34,24 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       setLoading(true);
       setError(undefined);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
       try {
-        const response = await axios.post('http://192.168.5.103:8000/api/csvfileupload/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+        const response = await axios.post(
+          "http://20.52.97.229:8000/api/csvfileupload/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         onSearch(response.data.queries);
         setFile(null); // Dosyayı temizle
       } catch (err) {
-        setError('Failed to upload file');
-        console.error('Error:', err);
+        setError("Failed to upload file");
+        console.error("Error:", err);
       } finally {
         setLoading(false);
       }

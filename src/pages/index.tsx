@@ -59,7 +59,7 @@ const HomePage = () => {
             borderRadius="full"
             _hover={{ bg: "blue.600" }}
           >
-            Giriş Yap
+            Get Started
           </Button>
         </VStack>
       </Box>
