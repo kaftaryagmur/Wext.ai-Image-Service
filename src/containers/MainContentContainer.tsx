@@ -12,8 +12,6 @@ const MainContentContainer = () => {
   useEffect(() => {
     if (authLoading) return;
 
-    console.log("isAuthenticated:", isAuthenticated);
-
     if (!isAuthenticated) {
       router.push("/login");
     }

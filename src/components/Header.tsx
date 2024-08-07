@@ -1,4 +1,3 @@
-import styles from "../styles/header.module.css";
 import { Box, Flex, Button, Image, Spacer } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
@@ -7,7 +6,7 @@ interface HeaderProps {
   onSearch: (keywords: string[]) => void;
 }
 
-const Header = ({ onSearch }: HeaderProps) => {
+const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const router = useRouter();
 
   const handleLogout = () => {
@@ -16,15 +15,15 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   return (
-    <Box bg="#e7ecf8" p={4} boxShadow="3px">
+    <Box bg="#e7ecf8" p={6} boxShadow="3px">
       <Flex align="center">
-        <Box className={styles["logo"]}>
+        <Box >
           <Image
             src="/favicon.ico"
             alt="Logo"
             boxSize="50px"
             objectFit="contain"
-          />{" "}
+          />
           Wext.ai
         </Box>
         <Spacer />
@@ -37,10 +36,8 @@ const Header = ({ onSearch }: HeaderProps) => {
           _hover={{ bg: "teal.600" }}
           onClick={handleLogout}
           colorScheme="blue"
-          width="full"
+          width="8%"
           type="submit"
-          className={styles["btn-primary"]}
-          fontFamily="Poppins-Bold, sans-serif"
         >
           Logout
         </Button>

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { Box, Button, Input, Text } from '@chakra-ui/react';
+import { useState } from "react";
+import axios from "axios";
+import { Box, Button, Input, Text } from "@chakra-ui/react";
 
 const CsvUpload = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -15,7 +15,7 @@ const CsvUpload = () => {
 
   const handleUpload = async () => {
     if (!file) {
-      setError('Please select a file');
+      setError("Please select a file");
       return;
     }
 
@@ -23,18 +23,20 @@ const CsvUpload = () => {
     setError(null);
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     try {
-      await axios.post('/api/csvfileupload/', formData, {
+      await axios.post("/api/csvfileupload/", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
       setFile(null);
-      alert('File uploaded successfully');
+      alert("File uploaded successfully");
+      // Refresh the page after successful upload
+      window.location.reload();
     } catch (err) {
-      setError('Failed to upload file');
+      setError("Failed to upload file");
     } finally {
       setUploading(false);
     }

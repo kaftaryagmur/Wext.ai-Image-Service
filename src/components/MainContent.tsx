@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { Box, Text } from '@chakra-ui/react';
-import Header from '@/components/Header';
-import SearchResults from '@/components/SearchResults';
-import SelectedPhotosContainer from '@/containers/SelectedPhotosContainer';
-import { useAuth } from '@/components/AuthProvider';
+import React, { useState } from "react";
+import { Box, Text } from "@chakra-ui/react";
+import Header from "@/components/Header";
+import SearchResults from "@/components/SearchResults";
+import SelectedPhotosContainer from "@/containers/SelectedPhotosContainer";
+import { useAuth } from "@/components/AuthProvider";
 
-const MainContent = () => {
+interface MainContentProps {
+  onSearch: (keywords: string[]) => void;
+  searchKeywords: string[];
+}
+
+const MainContent: React.FC<MainContentProps> = ({
+  onSearch,
+  searchKeywords,
+}) => {
   const { isAuthenticated, loading: authLoading } = useAuth();
-  const [searchKeywords, setSearchKeywords] = useState<string[]>([]);
   const [selectedPhotos, setSelectedPhotos] = useState<any[]>([]);
-
-  const handleSearch = (keywords: string[]) => {
-    setSearchKeywords(keywords);
-  };
 
   const handleSelectedPhotosChange = (photos: any[]) => {
     setSelectedPhotos(photos);
@@ -23,7 +26,7 @@ const MainContent = () => {
 
   return (
     <Box>
-      <Header onSearch={handleSearch} />
+      <Header onSearch={onSearch} />
       {searchKeywords.length > 0 && (
         <>
           <SearchResults
@@ -32,7 +35,9 @@ const MainContent = () => {
           />
         </>
       )}
-      {selectedPhotos.length > 0 && <SelectedPhotosContainer selectedPhotos={selectedPhotos} />}
+      {selectedPhotos.length > 0 && (
+        <SelectedPhotosContainer selectedPhotos={selectedPhotos} />
+      )}
     </Box>
   );
 };

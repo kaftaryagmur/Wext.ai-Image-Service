@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Button, Box, Flex, Text, Spinner } from '@chakra-ui/react';
-import useAxios from '@/hooks/useAxios';
-import { useAuth } from '@/components/AuthProvider';
+import React, { useState } from "react";
+import { Button, Box, Flex, Text, Spinner } from "@chakra-ui/react";
+import useAxios from "@/hooks/useAxios";
+import { useAuth } from "@/components/AuthProvider";
 
-const SelectedPhotosContainer = ({ selectedPhotos }: { selectedPhotos: any[] }) => {
+const SelectedPhotosContainer = ({
+  selectedPhotos,
+}: {
+  selectedPhotos: any[];
+}) => {
   const axiosInstance = useAxios();
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -14,12 +18,14 @@ const SelectedPhotosContainer = ({ selectedPhotos }: { selectedPhotos: any[] }) 
     setError(null);
 
     try {
-      const response = await axiosInstance.post('/savephoto/', { photos: selectedPhotos });
-      console.log('Submitted photos:', selectedPhotos);
-      alert('Photos saved successfully');
+      const response = await axiosInstance.post("/savephoto/", {
+        photos: selectedPhotos,
+      });
+      console.log("Submitted photos:", selectedPhotos);
+      alert("Photos saved successfully");
     } catch (error: any) {
-      setError('Failed to save photos');
-      console.error('Error:', error);
+      setError("Failed to save photos");
+      console.error("You already sumbitted this photo:", error);
     } finally {
       setLoading(false);
     }
