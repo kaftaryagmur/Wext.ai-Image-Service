@@ -45,7 +45,7 @@ const HomePage = () => {
           mb={6}
         />
         <VStack spacing={4} align="center">
-          <Heading as="h1" size="2xl" mb={4}>
+          <Heading as="h1" size="2xl" mb={4} textAlign="center">
             Wext.AI Image Service
           </Heading>
           <Text fontSize="lg" color="gray.600" textAlign="center" mb={6}>

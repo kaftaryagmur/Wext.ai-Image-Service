@@ -11,7 +11,7 @@ import {
   Flex,
   VStack,
   useBreakpointValue,
-  useDisclosure
+  Divider,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Head from "next/head";
@@ -62,16 +62,20 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
         alignItems="center"
         justifyContent="center"
         p={10}
+        position="relative"
+        overflow="hidden"
       >
         <Image
           src="https://wext.ai/html/assets/images/screens/hero-illustration.webp"
           alt="Hero Illustration"
           objectFit="contain"
-          height="60%"
-          width="60%"
+          height="58%"
+          width="70%"
+          className="slide-up"
+          boxShadow="dark-lg" // Gölge rengi ve yoğunluğu
+          borderRadius={10}
         />
       </Box>
-
       {/* Sağ Taraf: Giriş Formu */}
       <Box
         flexBasis={rightWidth}
@@ -109,7 +113,10 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
               </Text>
             </Flex>
           </Heading>
-          <form style={{ paddingRight: '10px', paddingLeft: '10px' }} onSubmit={handleSubmit}>
+          <form
+            style={{ paddingRight: "10px", paddingLeft: "10px" }}
+            onSubmit={handleSubmit}
+          >
             <Stack spacing={8}>
               <FormControl id="username">
                 <FormLabel>Username</FormLabel>
@@ -132,15 +139,16 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
                 />
               </FormControl>
               {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+              <Divider />
               <Button
                 colorScheme="blue"
-                width="full"
+                width="30%"
                 type="submit"
                 isLoading={loading}
                 loadingText="Logging in..."
                 spinner={<BeatLoader size={8} color="white" />}
               >
-                {loading ? '' : 'Login'}
+                {loading ? "" : "Login"}
               </Button>
             </Stack>
           </form>

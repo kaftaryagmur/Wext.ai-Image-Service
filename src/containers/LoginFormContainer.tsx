@@ -52,9 +52,7 @@ const LoginFormContainer = () => {
 
   return (
     <Box>
-      <LoginForm onSubmit={handleSubmit} />
-      {error && <Text color="red" mt={2}>{error}</Text>}
-      {success && <Text color="green" mt={2}>{success}</Text>}
+      <LoginForm onSubmit={handleSubmit} errorMessage={error} />
     </Box>
   );
 };
