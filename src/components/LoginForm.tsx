@@ -13,7 +13,7 @@ import {
   useBreakpointValue,
   Divider,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { BeatLoader } from "react-spinners";
@@ -42,6 +42,13 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
 
   const leftWidth = useBreakpointValue({ base: "100%", md: "60%" });
   const rightWidth = useBreakpointValue({ base: "100%", md: "40%" });
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden"; // Hide scrollbar
+    return () => {
+      document.body.style.overflow = "unset"; // Reset scrollbar
+    };
+  }, []);
 
   return (
     <Box
@@ -84,6 +91,7 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
         alignItems="center"
         justifyContent="center"
         p={10}
+        className="slide-up"
       >
         <VStack spacing={4} align="stretch" width="100%" maxWidth="600px">
           <Heading as="h2" size="lg" mb={10} textAlign="center">

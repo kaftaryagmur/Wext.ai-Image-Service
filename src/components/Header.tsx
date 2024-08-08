@@ -1,4 +1,4 @@
-import { Box, Flex, Button, Image, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Button, Image, Spacer, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
 
@@ -15,20 +15,31 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   return (
-    <Box bg="#e7ecf8" p={6} boxShadow="3px">
-      <Flex align="center">
-        <Box >
+    <Box bg="#e7ecf8" p={4} boxShadow="md">
+      <Flex
+        align="center"
+        maxW="1200px"
+        mx="auto"
+        px={4}
+        justify="space-between" // Aligns children to the start and end
+      >
+        <Flex align="center">
           <Image
             src="/favicon.ico"
             alt="Logo"
             boxSize="50px"
             objectFit="contain"
+            mr={3}
           />
-          Wext.ai
-        </Box>
-        <Spacer />
+          <Text fontSize="lg" fontWeight="bold" color="#40475c">
+            Wext AI
+          </Text>
+        </Flex>
+
+        {/* Arama Çubuğu */}
         <SearchBar onSearch={onSearch} />
-        <Spacer />
+
+        {/* Çıkış Butonu */}
         <Button
           variant="solid"
           size="md"
@@ -36,8 +47,6 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           _hover={{ bg: "teal.600" }}
           onClick={handleLogout}
           colorScheme="blue"
-          width="8%"
-          type="submit"
         >
           Logout
         </Button>

@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import LoadingScreen from "../components/LoadingScreen";
 
-const publicRoutes = ["/login"];
-
 const theme = extendTheme({
   fonts: {
     heading: `'Poppins', sans-serif`,
@@ -68,7 +66,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router]);
 
-  const isPublicRoute = publicRoutes.includes(router.pathname);
 
   return (
     <ChakraProvider theme={theme}>

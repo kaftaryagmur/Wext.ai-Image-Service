@@ -6,8 +6,11 @@ import {
   Spinner,
   Text,
   Button,
+  VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { useAuth } from "@/components/AuthProvider";
@@ -22,11 +25,17 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      setFile(acceptedFiles[0]);
     }
-  };
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: { "text/csv": [".csv"] },
+    maxFiles: 1,
+  });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,9 +65,12 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
         setLoading(false);
       }
     } else {
-      setError("Please select a CSV file");
+      setError("Please select a CSV file!");
     }
   };
+
+  const dropzoneBg = useColorModeValue("#f0f4f8", "#2d3748");
+  const dropzoneHoverBg = useColorModeValue("#e1e5e9", "#4a5568");
 
   return (
     <Box
@@ -67,48 +79,49 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       display="flex"
       alignItems="center"
       borderRadius="8px"
-      bg="#2d4e69"
-      padding="8px"
+      bg="#003764"
+      padding="18px"
       margin="15px"
-      width="50%"
-      _hover={{ bg: "#009eff" }}
-      _focusWithin={{ bg: "#009eff" }}
+      width={{ base: "90%", sm: "70%", md: "70%" }}
+      _hover={{ bg: "#004080" }}
+      _focusWithin={{ bg: "#004080" }}
     >
-      <Input
-        type="file"
-        accept=".csv"
-        onChange={handleFileChange}
-        display="none"
-        id="csvFileInput"
-      />
-      <Button
-        as="label"
-        htmlFor="csvFileInput"
-        bg="teal.500"
-        color="white"
-        borderRadius="8px"
+      <VStack
+        {...getRootProps()}
+        bg={dropzoneBg}
         padding="8px"
-        marginRight="8px"
-        cursor="pointer"
-        _hover={{ bg: "#009eff" }}
+        borderRadius="8px"
+        borderWidth="2px"
+        borderColor={file ? "green.500" : "gray.300"}
+        borderStyle={file ? "solid " : "dashed"}
+        _hover={{ bg: dropzoneHoverBg }}
+        width="100%"
+        textAlign="center"
       >
-        {file ? file.name : "Upload CSV"}
-      </Button>
+        <input {...getInputProps()} />
+        <Text color="gray">
+          {file
+            ? file.name
+            : "Click to choose a file or drag it here."}
+        </Text>
+      </VStack>
       <IconButton
         aria-label="Search"
         icon={loading ? <Spinner size="lg" /> : <SearchIcon />}
-        variant="outline"
+        variant="solid"
         colorScheme="teal"
         padding="8px"
-        ml={6}
+        ml={2}
         type="submit"
         isDisabled={loading}
-        _hover={{ bg: "#009eff", color: "white" }}
-        _active={{ bg: "#003764", color: "white" }}
+        _hover={{ bg: "teal.600", color: "white" }}
+        _active={{ bg: "teal.700", color: "white" }}
       />
       {error && (
         <Flex align="center" ml={4}>
-          <Text color="red.500">{error}</Text>
+          <Text color="white" fontSize="sm">
+            {error}
+          </Text>
         </Flex>
       )}
     </Box>
