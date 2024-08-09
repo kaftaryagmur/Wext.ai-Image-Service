@@ -47,7 +47,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
 
       try {
         const response = await axios.post(
-          "http://20.52.97.229:8000/api/csvfileupload/",
+          "http://192.168.5.103:8000/api/csvfileupload/",
           formData,
           {
             headers: {
@@ -100,9 +100,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       >
         <input {...getInputProps()} />
         <Text color="gray">
-          {file
-            ? file.name
-            : "Click to choose a file or drag it here."}
+          {file ? file.name : "Click to choose a file or drag it here."}
         </Text>
       </VStack>
       <IconButton

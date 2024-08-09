@@ -21,7 +21,7 @@ const MainContentContainer = () => {
     setSearchKeywords(keywords);
   };
 
-  if (authLoading) return <Text>Loading...</Text>;
+  if (authLoading) return null;
   if (!isAuthenticated) return null;
 
   return (

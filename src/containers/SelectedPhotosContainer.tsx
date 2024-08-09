@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Button, Box, Flex, Text, Spinner } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Button, Box, Flex, Text, Spinner, SimpleGrid, Image, Checkbox } from "@chakra-ui/react";
 import useAxios from "@/hooks/useAxios";
-import { useAuth } from "@/components/AuthProvider";
 import EmptyState from "@/components/EmptyState";
 
 const SelectedPhotosContainer = ({
@@ -10,8 +9,7 @@ const SelectedPhotosContainer = ({
   selectedPhotos: any[];
 }) => {
   const axiosInstance = useAxios();
-  const { token } = useAuth();
-  const [loading, setLoading] = useState(false); // Başlangıçta false
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
@@ -19,13 +17,13 @@ const SelectedPhotosContainer = ({
     setError(null);
 
     try {
-      const response = await axiosInstance.post("/savephoto/", {
+      await axiosInstance.post("/savephoto/", {
         photos: selectedPhotos,
       });
       console.log("Submitted photos:", selectedPhotos);
       alert("Photos saved successfully");
     } catch (error: any) {
-      setError("Failed to save photos");
+      setError("Failed to save photos. Please try again.");
       console.error("Error submitting photos:", error);
     } finally {
       setLoading(false);
@@ -33,7 +31,6 @@ const SelectedPhotosContainer = ({
   };
 
   const handleUpload = () => {
-    // Fotoğraf yükleme veya yükleme sayfasına yönlendirme mantığı
     alert("Redirect to upload photos");
   };
 
@@ -59,17 +56,50 @@ const SelectedPhotosContainer = ({
       ) : selectedPhotos.length === 0 ? (
         <EmptyState onUpload={handleUpload} />
       ) : (
-        <Flex direction="column" align="flex-end">
-          <Button
-            colorScheme="blue"
-            onClick={handleSubmit}
-            isDisabled={selectedPhotos.length === 0} // Fotoğraf seçilmediyse butonu devre dışı bırak
-            _hover={{ bg: "blue.600" }}
-            _active={{ bg: "blue.700" }}
-          >
-            Submit
-          </Button>
-        </Flex>
+        <>
+          <SimpleGrid columns={[3, 4, 5]} spacing={4} mb={4}>
+            {selectedPhotos.map((photo, index) => (
+              <Box
+                key={index}
+                borderWidth="1px"
+                borderRadius="lg"
+                overflow="hidden"
+                position="relative"
+                width="150px" // Bileşenin genişliği
+                height="150px" // Bileşenin yüksekliği
+              >
+                <Image
+                  src={photo.photo_url}
+                  alt={`Photo ${index}`}
+                  objectFit="cover"
+                  width="100%"
+                  height="100%"
+                />
+                <Checkbox
+                  position="absolute"
+                  bottom="5px"
+                  right="5px"
+                  colorScheme="teal"
+                  size="md"
+                  isChecked={selectedPhotos.some(
+                    (p) => p.photo_url === photo.photo_url
+                  )}
+                />
+              </Box>
+            ))}
+          </SimpleGrid>
+          <Flex direction="column" align="flex-end">
+            <Button
+              colorScheme="blue"
+              onClick={handleSubmit}
+              isDisabled={selectedPhotos.length === 0}
+              _hover={{ bg: "blue.600" }}
+              _active={{ bg: "blue.700" }}
+            >
+              Submit
+            </Button>
+          </Flex>
+        </>
       )}
     </Box>
   );
