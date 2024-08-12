@@ -1,20 +1,17 @@
-# Node.js imajını kullanarak bir aşamalı build oluştur
-FROM node:18-alpine
+FROM node:18.18.0-alpine
 
-# Çalışma dizini oluştur
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Uygulama bağımlılıklarını yükle
-COPY package*.json ./
+COPY package*.json .
+COPY tsconfig.json .
+
+
 RUN npm install
 
-# Uygulama dosyalarını kopyala ve build et
 COPY . .
-RUN npm run dev
 
-# Uygulamayı bir web sunucusu ile çalıştır
-RUN npm install -g serve
-CMD ["serve", "-s", "build"]
+RUN npm run build
 
-# Uygulama 3000 portunda çalışacak
 EXPOSE 3000
+
+CMD ["npm", "run", "start"]
