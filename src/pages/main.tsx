@@ -6,6 +6,7 @@ import MainContentContainer  from "@/containers/MainContentContainer";
 
 const MainPage = () => {
   return (
+    
     <AuthProvider>
       <MainContentContainer />
     </AuthProvider>

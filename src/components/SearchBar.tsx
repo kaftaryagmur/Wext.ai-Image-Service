@@ -1,27 +1,24 @@
 import {
-  Input,
   Box,
   IconButton,
   Flex,
   Spinner,
   Text,
-  Button,
   VStack,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useState, useCallback } from "react";
+import { FormEvent, useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { SearchIcon } from "@chakra-ui/icons";
 import useAxios from "@/hooks/useAxios";
-import { useAuth } from "@/components/AuthProvider";
 
 interface SearchBarProps {
   onSearch: (queries: string[]) => void;
 }
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
-  const axiosInstance = useAxios();
+  const axiosInstance = useAxios(); // useAxios hook'u kullanılıyor
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File | null>(null);
@@ -29,20 +26,20 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      setFile(acceptedFiles[0]);
+      setFile(acceptedFiles[0]); // Dosya seçildiğinde file state güncellenir
     }
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: { "text/csv": [".csv"] },
-    maxFiles: 1,
+    accept: { "text/csv": [".csv"] }, // Sadece CSV dosyalarına izin verilir
+    maxFiles: 1, // Maksimum 1 dosya yüklenebilir
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (file) {
-      setLoading(true);
+      setLoading(true); // Yükleme başlıyor
       setError(undefined);
       const formData = new FormData();
       formData.append("file", file);
@@ -53,7 +50,10 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
             "Content-Type": "multipart/form-data",
           },
         });
-        onSearch(response.data.queries);
+
+        console.log("Search Keywords from Response:", response.data.queries);
+        onSearch(response.data.queries); // Arama sonuçlarını üst bileşene gönderiyoruz
+
         toast({
           title: "File uploaded successfully.",
           description: `File: ${file.name} has been processed.`,
@@ -61,7 +61,8 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
           duration: 5000,
           isClosable: true,
         });
-        setFile(null); // Dosyayı temizle
+
+        setFile(null); // Dosya yüklemesi başarılı, file state sıfırlanır
       } catch (err) {
         setError("Failed to upload file");
         console.error("Error:", err);
@@ -73,10 +74,10 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
           isClosable: true,
         });
       } finally {
-        setLoading(false);
+        setLoading(false); // Yükleme tamamlandı
       }
     } else {
-      setError("Please select a CSV file!");
+      setError("Please select a CSV file!"); // Dosya seçilmediyse hata mesajı
       toast({
         title: "No file selected.",
         description: "Please select a CSV file to upload.",
@@ -93,7 +94,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   return (
     <Box
       as="form"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit} // Form submit işlemi
       display="flex"
       alignItems="center"
       borderRadius="8px"
@@ -111,12 +112,12 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
         borderRadius="8px"
         borderWidth="2px"
         borderColor={file ? "green.500" : "gray.300"}
-        borderStyle={file ? "solid " : "dashed"}
+        borderStyle={file ? "solid" : "dashed"}
         _hover={{ bg: dropzoneHoverBg }}
         width="100%"
         textAlign="center"
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps()} /> {/* Dosya girişi */}
         <Text color="gray">
           {file ? file.name : "Click to choose a file or drag it here."}
         </Text>
@@ -129,11 +130,11 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
         padding="8px"
         ml={2}
         type="submit"
-        isDisabled={loading}
+        isDisabled={loading} // Yükleme sırasında buton devre dışı bırakılır
         _hover={{ bg: "teal.600", color: "white" }}
         _active={{ bg: "teal.700", color: "white" }}
       />
-      {error && (
+      {error && ( // Hata mesajı görüntülenir
         <Flex align="center" ml={4}>
           <Text color="white" fontSize="sm">
             {error}

@@ -3,6 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { useAuth } from "../components/AuthProvider";
 import { useRouter } from "next/router";
 import MainContent from "../components/MainContent";
+import Head from "next/head";
 
 const MainContentContainer = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
@@ -26,6 +27,7 @@ const MainContentContainer = () => {
 
   return (
     <Box>
+      
       <MainContent onSearch={handleSearch} searchKeywords={searchKeywords} />
     </Box>
   );

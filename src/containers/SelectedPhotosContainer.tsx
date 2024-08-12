@@ -17,7 +17,7 @@ const SelectedPhotosContainer = ({
 }: {
   selectedPhotos: any[];
 }) => {
-  const axiosInstance = useAxios();
+  const axiosInstance = useAxios(); // useAxios hook'u kullanılıyor
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,10 +26,10 @@ const SelectedPhotosContainer = ({
     setError(null);
 
     try {
-      const response = await axiosInstance.post("/savephoto/", {
+      // Token doğrulama ve yenileme işlemi useAxios tarafından otomatik olarak yapılır
+      await axiosInstance.post("/savephoto/", {
         photos: selectedPhotos,
       });
-
       console.log("Submitted photos:", selectedPhotos);
       alert("Photos saved successfully");
     } catch (error: any) {
@@ -58,7 +58,15 @@ const SelectedPhotosContainer = ({
       justifyContent="center"
     >
       {loading ? (
-        <Spinner size="xl" />
+        <Spinner
+          thickness="50px"
+          speed="0.65s"
+          emptyColor="#6a4dff"
+          color="#b6a9f9"
+          size="xl"
+          minH="180px"
+          minW="18px"
+        />
       ) : error ? (
         <Text color="red.500" textAlign="center" fontSize="lg">
           {error}
@@ -75,7 +83,7 @@ const SelectedPhotosContainer = ({
                 borderRadius="lg"
                 overflow="hidden"
                 position="relative"
-                width="150px" // Bileşenin genişliği
+                width="150px"
                 height="150px" // Bileşenin yüksekliği
               >
                 <Image

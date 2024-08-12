@@ -3,12 +3,11 @@ import {
   Box,
   SimpleGrid,
   Image,
-  Spinner,
   Text,
   Checkbox,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useAuth } from "@/components/AuthProvider";
+import useAxios from "@/hooks/useAxios";
+import LoadingScreen from "./LoadingScreen";
 
 interface SearchResultsProps {
   keywords: string[];
@@ -29,21 +28,15 @@ const SearchResults = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([]);
-  const { token } = useAuth();
+  const axiosInstance = useAxios();
 
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
       try {
-        const response = await axios.post(
-          "http://20.52.97.229:8000/api/getphotos/",
-          { queries: keywords },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axiosInstance.post("/getphotos/", {
+          queries: keywords,
+        });
 
         const photosByQuery: { [key: string]: Photo[] } = {};
         response.data.forEach((photo: any) => {
@@ -69,7 +62,7 @@ const SearchResults = ({
     if (keywords.length > 0) {
       fetchImages();
     }
-  }, [keywords, token]);
+  }, [keywords, axiosInstance]);
 
   useEffect(() => {
     onSelectedPhotosChange(selectedPhotos);
@@ -83,7 +76,7 @@ const SearchResults = ({
     );
   };
 
-  if (loading) return <Spinner size="xl" />;
+  if (loading) return <LoadingScreen />;
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
