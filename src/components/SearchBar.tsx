@@ -21,7 +21,6 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
-  const { token } = useAuth();
   const axiosInstance = useAxios();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);

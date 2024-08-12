@@ -1,21 +1,37 @@
 import React from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Button } from '@chakra-ui/react';
 
-const EmptyState: React.FC = () => {
+interface EmptyStateProps {
+  onUpload?: () => void; // onUpload prop'unu ekliyoruz
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({ onUpload }) => {
   return (
     <Box
+      flex="1"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      height="100vh"
-      bgImage="url('/images/background.png')" // Uygulama arkaplanı
-      bgSize="cover"
+      bgImage="url('/images/background.png')"
+      bgSize="contain"
       bgPosition="center"
-      opacity={0.5} // Opaciti'si düşük arka plan
+      bgRepeat="no-repeat"
+      opacity={0.5}
+      flexDirection="column" // Butonu alt alta yerleştirmek için flexDirection ekledik
     >
-      <Text fontSize="xl" color="black.800" fontWeight="bolder">
-        Welcome to the Module! Please upload a CSV file to get started.
+      <Text
+        fontSize="2xl"
+        color="#000000"
+        fontWeight="extrabold"
+        mb={4} // Butonla metin arasına boşluk ekledik
+      >
+        Please upload a CSV file to get started.
       </Text>
+      {onUpload && (
+        <Button onClick={onUpload} colorScheme="blue">
+          Upload Photos
+        </Button>
+      )}
     </Box>
   );
 };

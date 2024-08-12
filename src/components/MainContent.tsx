@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import SearchResults from "@/components/SearchResults";
 import SelectedPhotosContainer from "@/containers/SelectedPhotosContainer";
-import EmptyState from "@/components/EmptyState"; // EmptyState bileşenini içe aktar
+import EmptyState from "@/components/EmptyState";
 import { useAuth } from "@/components/AuthProvider";
+import LoadingScreen from "./LoadingScreen";
 
 interface MainContentProps {
   onSearch: (keywords: string[]) => void;
@@ -22,30 +23,30 @@ const MainContent: React.FC<MainContentProps> = ({
     setSelectedPhotos(photos);
   };
 
-  if (authLoading) return <Text>Loading...</Text>;
+  if (authLoading) return <LoadingScreen />;
   if (!isAuthenticated) return null;
 
   return (
-    <Box>
+    <Flex direction="column" height="100vh">
       <Header onSearch={onSearch} />
-      
-      {/* Eğer dosya yüklenmemiş veya arama yapılmamışsa EmptyState göster */}
-      {searchKeywords.length === 0 && selectedPhotos.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {searchKeywords.length > 0 && (
-            <SearchResults
-              keywords={searchKeywords}
-              onSelectedPhotosChange={handleSelectedPhotosChange}
-            />
-          )}
-          {selectedPhotos.length > 0 && (
-            <SelectedPhotosContainer selectedPhotos={selectedPhotos} />
-          )}
-        </>
-      )}
-    </Box>
+      <Box flex="1" display="flex">
+        {searchKeywords.length === 0 && selectedPhotos.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <>
+            {searchKeywords.length > 0 && (
+              <SearchResults
+                keywords={searchKeywords}
+                onSelectedPhotosChange={handleSelectedPhotosChange}
+              />
+            )}
+            {selectedPhotos.length > 0 && (
+              <SelectedPhotosContainer selectedPhotos={selectedPhotos} />
+            )}
+          </>
+        )}
+      </Box>
+    </Flex>
   );
 };
 

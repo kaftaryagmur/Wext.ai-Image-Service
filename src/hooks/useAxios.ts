@@ -8,7 +8,7 @@ const useAxios = () => {
 
   useEffect(() => {
     const axiosInstance = axios.create({
-      baseURL: 'http://20.52.97.229:8000/api',
+      baseURL: 'http://192.168.5.103:8000/api',
       headers: {
         Authorization: token ? `Bearer ${token}` : '',
       },
@@ -24,7 +24,7 @@ const useAxios = () => {
 
           try {
             const { data } = await axios.post(
-              'http://20.52.97.229:8000/api/token/refresh',
+              'http://192.168.5.103:8000/api/token/refresh',
               {
                 refresh: localStorage.getItem('refresh_token'),
               }
