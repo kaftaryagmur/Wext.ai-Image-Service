@@ -8,9 +8,9 @@ const useAxios = () => {
 
   useEffect(() => {
     const axiosInstance = axios.create({
-      baseURL: 'http://192.168.5.103:8000/api',
+      baseURL: 'http://20.52.97.229:8000/api',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token ? `Bearer ${token}` : '',
       },
     });
 
@@ -23,23 +23,23 @@ const useAxios = () => {
           originalRequest._retry = true;
 
           try {
-            const refreshToken = localStorage.getItem('refresh_token');
-            if (!refreshToken) throw new Error("No refresh token available");
-
             const { data } = await axios.post(
-              'http://192.168.5.103:8000/api/token/refresh/',
-              { refresh: refreshToken }
+              'http://20.52.97.229:8000/api/token/refresh',
+              {
+                refresh: localStorage.getItem('refresh_token'),
+              }
             );
-
-            // Yeni token'ı sakla ve login işlemi yap
+          
+            console.log('Token yenilendi:', data.access);
+          
             localStorage.setItem('access_token', data.access);
-            login(data.access, refreshToken);
-
-            // Yeni token'ı header'a ekle
+            login(data.access, localStorage.getItem('refresh_token') || '');
+          
             axiosInstance.defaults.headers['Authorization'] = `Bearer ${data.access}`;
             originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
-
-            // Orijinal isteği yeniden yap
+          
+            console.log('Orijinal istek yeniden yapılıyor:', originalRequest);
+          
             return axiosInstance(originalRequest);
           } catch (err) {
             console.error('Token yenileme hatası:', err);

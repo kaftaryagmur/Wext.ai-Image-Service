@@ -23,7 +23,7 @@ const MainContent: React.FC<MainContentProps> = ({
     setSelectedPhotos(photos);
   };
 
-  if (authLoading) return <LoadingScreen />;
+  if (authLoading) return <LoadingScreen/>;
   if (!isAuthenticated) return null;
 
   return (

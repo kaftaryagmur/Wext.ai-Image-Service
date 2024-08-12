@@ -26,9 +26,10 @@ const SelectedPhotosContainer = ({
     setError(null);
 
     try {
-      await axiosInstance.post("/savephoto/", {
+      const response = await axiosInstance.post("/savephoto/", {
         photos: selectedPhotos,
       });
+
       console.log("Submitted photos:", selectedPhotos);
       alert("Photos saved successfully");
     } catch (error: any) {

@@ -36,7 +36,7 @@ const SearchResults = ({
       setLoading(true);
       try {
         const response = await axios.post(
-          "http://192.168.5.103:8000/api/getphotos/",
+          "http://20.52.97.229:8000/api/getphotos/",
           { queries: keywords },
           {
             headers: {
