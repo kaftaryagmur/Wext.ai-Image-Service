@@ -3,6 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import SearchResults from "@/components/SearchResults";
 import SelectedPhotosContainer from "@/containers/SelectedPhotosContainer";
+import EmptyState from "@/components/EmptyState"; // EmptyState bileşenini içe aktar
 import { useAuth } from "@/components/AuthProvider";
 
 interface MainContentProps {
@@ -27,16 +28,22 @@ const MainContent: React.FC<MainContentProps> = ({
   return (
     <Box>
       <Header onSearch={onSearch} />
-      {searchKeywords.length > 0 && (
+      
+      {/* Eğer dosya yüklenmemiş veya arama yapılmamışsa EmptyState göster */}
+      {searchKeywords.length === 0 && selectedPhotos.length === 0 ? (
+        <EmptyState />
+      ) : (
         <>
-          <SearchResults
-            keywords={searchKeywords}
-            onSelectedPhotosChange={handleSelectedPhotosChange}
-          />
+          {searchKeywords.length > 0 && (
+            <SearchResults
+              keywords={searchKeywords}
+              onSelectedPhotosChange={handleSelectedPhotosChange}
+            />
+          )}
+          {selectedPhotos.length > 0 && (
+            <SelectedPhotosContainer selectedPhotos={selectedPhotos} />
+          )}
         </>
-      )}
-      {selectedPhotos.length > 0 && (
-        <SelectedPhotosContainer selectedPhotos={selectedPhotos} />
       )}
     </Box>
   );

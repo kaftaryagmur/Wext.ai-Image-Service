@@ -8,11 +8,12 @@ import {
   Button,
   VStack,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { SearchIcon } from "@chakra-ui/icons";
-import axios from "axios";
+import useAxios from "@/hooks/useAxios";
 import { useAuth } from "@/components/AuthProvider";
 
 interface SearchBarProps {
@@ -21,9 +22,11 @@ interface SearchBarProps {
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
   const { token } = useAuth();
+  const axiosInstance = useAxios();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File | null>(null);
+  const toast = useToast();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -46,26 +49,42 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       formData.append("file", file);
 
       try {
-        const response = await axios.post(
-          "http://192.168.5.103:8000/api/csvfileupload/",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axiosInstance.post("/csvfileupload/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         onSearch(response.data.queries);
+        toast({
+          title: "File uploaded successfully.",
+          description: `File: ${file.name} has been processed.`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
         setFile(null); // Dosyayı temizle
       } catch (err) {
         setError("Failed to upload file");
         console.error("Error:", err);
+        toast({
+          title: "File upload failed.",
+          description: "There was an error uploading your file.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       } finally {
         setLoading(false);
       }
     } else {
       setError("Please select a CSV file!");
+      toast({
+        title: "No file selected.",
+        description: "Please select a CSV file to upload.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

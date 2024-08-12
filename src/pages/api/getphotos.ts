@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.5.103:8000/api/getphotos/';
+const API_URL = 'http://20.52.97.229:8000/api/getphotos/';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

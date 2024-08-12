@@ -1,32 +1,21 @@
-import React from "react";
-import { Box, Text, Button, Image } from "@chakra-ui/react";
+import React from 'react';
+import { Box, Text } from '@chakra-ui/react';
 
-const EmptyState: React.FC<{ onUpload: () => void }> = ({ onUpload }) => {
+const EmptyState: React.FC = () => {
   return (
     <Box
-      p={4}
-      borderWidth={1}
-      borderRadius="md"
-      boxShadow="md"
-      bg="#f0f4f8"
-      minH="200px"
       display="flex"
-      flexDirection="column"
       alignItems="center"
       justifyContent="center"
+      height="100vh"
+      bgImage="url('/images/background.png')" // Uygulama arkaplanı
+      bgSize="cover"
+      bgPosition="center"
+      opacity={0.5} // Opaciti'si düşük arka plan
     >
-      <Image
-        src="/path/to/placeholder-image.png"
-        alt="Placeholder"
-        boxSize="100px"
-        mb={4}
-      />
-      <Text fontSize="lg" mb={4} textAlign="center" color="#40475c">
-        No photos selected. Please upload photos to display here.
+      <Text fontSize="xl" color="black.800" fontWeight="bolder">
+        Welcome to the Module! Please upload a CSV file to get started.
       </Text>
-      <Button colorScheme="blue" onClick={onUpload}>
-        Upload Photos
-      </Button>
     </Box>
   );
 };

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import HowToUse from "../components/HowToUse"; // Yeni bileşeni içe aktarın
 import { Link } from "react-scroll"; // react-scroll kütüphanesini içe aktarın
+import ScrollToTopButton from "@/components/ScrollToUpButton";
 
 const HomePage = () => {
   const router = useRouter();
@@ -62,11 +63,10 @@ const HomePage = () => {
           </Link>
         </VStack>
       </Box>
-
-      {/* HowToUse bileşenini tanımlamak için bir id kullanın */}
       <Box id="how-to-use">
         <HowToUse />
       </Box>
+      <ScrollToTopButton />
     </>
   );
 };
