@@ -10,7 +10,7 @@ const useAxios = () => {
     const axiosInstance = axios.create({
       baseURL: 'http://192.168.5.103:8000/api',
       headers: {
-        Authorization: token ? `Bearer ${token}` : '',
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -23,19 +23,23 @@ const useAxios = () => {
           originalRequest._retry = true;
 
           try {
+            const refreshToken = localStorage.getItem('refresh_token');
+            if (!refreshToken) throw new Error("No refresh token available");
+
             const { data } = await axios.post(
-              'http://192.168.5.103:8000/api/token/refresh',
-              {
-                refresh: localStorage.getItem('refresh_token'),
-              }
+              'http://192.168.5.103:8000/api/token/refresh/',
+              { refresh: refreshToken }
             );
 
+            // Yeni token'ı sakla ve login işlemi yap
             localStorage.setItem('access_token', data.access);
-            login(data.access, localStorage.getItem('refresh_token') || '');
+            login(data.access, refreshToken);
 
+            // Yeni token'ı header'a ekle
             axiosInstance.defaults.headers['Authorization'] = `Bearer ${data.access}`;
             originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
 
+            // Orijinal isteği yeniden yap
             return axiosInstance(originalRequest);
           } catch (err) {
             console.error('Token yenileme hatası:', err);

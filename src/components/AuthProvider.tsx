@@ -24,9 +24,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const token = localStorage.getItem("access_token");
     if (token) {
       try {
-        const decoded: { exp: number } = jwtDecode<{ exp: number }>(token);
+        const decoded = jwtDecode<{ exp: number }>(token);
         const currentTime = Math.floor(Date.now() / 1000);
-        if (decoded.exp < currentTime) {
+
+        if (decoded.exp && decoded.exp < currentTime) {
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           setIsAuthenticated(false);

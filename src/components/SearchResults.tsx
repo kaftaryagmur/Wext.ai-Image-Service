@@ -97,6 +97,7 @@ const SearchResults = ({
             overflow="hidden"
             position="relative"
             p={2}
+            borderColor="#c9b6fa"
           >
             {images[keyword].map((photo, index) => (
               <Box key={index} position="relative" mb={2}>

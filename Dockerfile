@@ -10,7 +10,7 @@ RUN npm install
 
 # Uygulama dosyalarını kopyala ve build et
 COPY . .
-RUN npm run build
+RUN npm run dev
 
 # Uygulamayı bir web sunucusu ile çalıştır
 RUN npm install -g serve

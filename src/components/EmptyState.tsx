@@ -8,6 +8,7 @@ interface EmptyStateProps {
 const EmptyState: React.FC<EmptyStateProps> = ({ onUpload }) => {
   return (
     <Box
+    zIndex={-1}
       flex="1"
       display="flex"
       alignItems="center"

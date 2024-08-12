@@ -12,34 +12,34 @@ const theme = extendTheme({
   },
   styles: {
     global: {
-      'html, body': {
-        scrollbarWidth: 'thin', // Firefox için ince scrollbar
-        scrollbarColor: '#009eff #f0f0f0', // Scrollbar rengi ve track rengi
+      "html, body": {
+        scrollbarWidth: "thin",
+        scrollbarColor: "#7daeff #f0f4ff", // Daha yumuşak renkler
       },
-      '::-webkit-scrollbar': {
-        width: '12px', // Scrollbar genişliği
+      "::-webkit-scrollbar": {
+        width: "10px", // Biraz daha ince scrollbar
       },
-      '::-webkit-scrollbar-track': {
-        background: '#f0f0f0', // Scrollbar track rengi
-        borderRadius: '10px', // Köşe yuvarlatma
+      "::-webkit-scrollbar-track": {
+        background: "#f0f4ff", // Track rengi daha yumuşak
+        borderRadius: "20px", // Daha yuvarlak kenarlar
       },
-      '::-webkit-scrollbar-thumb': {
-        background: '#009eff', // Scrollbar rengi
-        borderRadius: '10px', // Köşe yuvarlatma
-        border: '3px solid #f0f0f0', // Track ile scrollbar arasındaki boşluk
+      "::-webkit-scrollbar-thumb": {
+        background: "#7daeff", // Scrollbar rengi daha yumuşak
+        borderRadius: "20px", // Daha yuvarlak kenarlar
+        border: "2px solid #f0f4ff", // Daha küçük bir boşluk
       },
-      '@keyframes slideUp': {
-        '0%': {
-          transform: 'translateY(100%)',
+      "@keyframes slideUp": {
+        "0%": {
+          transform: "translateY(100%)",
           opacity: 0,
         },
-        '100%': {
-          transform: 'translateY(0)',
+        "100%": {
+          transform: "translateY(0)",
           opacity: 1,
         },
       },
-      '.slide-up': {
-        animation: 'slideUp 1s ease-out',
+      ".slide-up": {
+        animation: "slideUp 1s ease-out",
       },
     },
   },
@@ -54,18 +54,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     const handleRouteChangeComplete = () => setLoading(false);
     const handleRouteChangeError = () => setLoading(false);
 
-    router.events.on('routeChangeStart', handleRouteChangeStart);
-    router.events.on('routeChangeComplete', handleRouteChangeComplete);
-    router.events.on('routeChangeError', handleRouteChangeError);
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events.on("routeChangeError", handleRouteChangeError);
 
     // Temizlik
     return () => {
-      router.events.off('routeChangeStart', handleRouteChangeStart);
-      router.events.off('routeChangeComplete', handleRouteChangeComplete);
-      router.events.off('routeChangeError', handleRouteChangeError);
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events.off("routeChangeError", handleRouteChangeError);
     };
   }, [router]);
-
 
   return (
     <ChakraProvider theme={theme}>
