@@ -1,6 +1,6 @@
 //front-end ile back-end arasında veri alışverişi sağlar
 import axios from "axios";
-export const fetchPhotos = async (query: string, p0: string): Promise<string[]> => {
+export const fetchPhotos = async (query: string, p20.52.97.229 string): Promise<string[]> => {
   try {
     const response = await axios.get(
       `http://20.52.97.229:8000/api/getphotos/`, // Endpoint URL'sini buraya yazın
