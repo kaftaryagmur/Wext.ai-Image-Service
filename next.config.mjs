@@ -4,7 +4,8 @@ export default {
     return [
       {
         source: "/api/:path*",
-        destination: "http://192.168.5.103:8000/:path*", // Django backend adresi
+        destination:
+          "https://wextaiblob.germanywestcentral.cloudapp.azure.com/:path*", // Django backend adresi
       },
     ];
   },

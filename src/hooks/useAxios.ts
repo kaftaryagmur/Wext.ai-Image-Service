@@ -8,7 +8,7 @@ const useAxios = () => {
 
   useEffect(() => {
     const axiosInstance = axios.create({
-      baseURL: 'http://192.168.5.103:8000/api',
+      baseURL: 'https://wextaiblob.germanywestcentral.cloudapp.azure.com/api',
       headers: {
         Authorization: token ? `Bearer ${token}` : '',
       },
@@ -24,7 +24,7 @@ const useAxios = () => {
 
           try {
             const { data } = await axios.post(
-              'http://192.168.5.103:8000/api/token/refresh',
+              'https://wextaiblob.germanywestcentral.cloudapp.azure.com/api/token/refresh',
               {
                 refresh: localStorage.getItem('refresh_token'),
               }
