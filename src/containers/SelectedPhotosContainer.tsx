@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Box,
-  Flex,
-  Text,
-  Spinner,
-  SimpleGrid,
-  Image,
-  Checkbox,
-} from "@chakra-ui/react";
+import { Button, Box, Flex, Text, Spinner, SimpleGrid, Image, Checkbox } from "@chakra-ui/react";
 import useAxios from "@/hooks/useAxios";
 import EmptyState from "@/components/EmptyState";
 
@@ -17,7 +8,7 @@ const SelectedPhotosContainer = ({
 }: {
   selectedPhotos: any[];
 }) => {
-  const axiosInstance = useAxios(); // useAxios hook'u kullanılıyor
+  const axiosInstance = useAxios();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +17,6 @@ const SelectedPhotosContainer = ({
     setError(null);
 
     try {
-      // Token doğrulama ve yenileme işlemi useAxios tarafından otomatik olarak yapılır
       await axiosInstance.post("/savephoto/", {
         photos: selectedPhotos,
       });
@@ -58,15 +48,7 @@ const SelectedPhotosContainer = ({
       justifyContent="center"
     >
       {loading ? (
-        <Spinner
-          thickness="50px"
-          speed="0.65s"
-          emptyColor="#6a4dff"
-          color="#b6a9f9"
-          size="xl"
-          minH="180px"
-          minW="18px"
-        />
+        <Spinner size="xl" />
       ) : error ? (
         <Text color="red.500" textAlign="center" fontSize="lg">
           {error}
@@ -83,7 +65,7 @@ const SelectedPhotosContainer = ({
                 borderRadius="lg"
                 overflow="hidden"
                 position="relative"
-                width="150px"
+                width="150px" // Bileşenin genişliği
                 height="150px" // Bileşenin yüksekliği
               >
                 <Image

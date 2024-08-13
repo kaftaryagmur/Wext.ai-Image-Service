@@ -8,7 +8,7 @@ const useAxios = () => {
 
   useEffect(() => {
     const axiosInstance = axios.create({
-      baseURL: 'http://20.52.97.229:8000/api',
+      baseURL: 'http://192.168.5.103:8000/api',
       headers: {
         Authorization: token ? `Bearer ${token}` : '',
       },
@@ -24,22 +24,18 @@ const useAxios = () => {
 
           try {
             const { data } = await axios.post(
-              'http://20.52.97.229:8000/api/token/refresh',
+              'http://192.168.5.103:8000/api/token/refresh',
               {
                 refresh: localStorage.getItem('refresh_token'),
               }
             );
-          
-            console.log('Token yenilendi:', data.access);
-          
+
             localStorage.setItem('access_token', data.access);
             login(data.access, localStorage.getItem('refresh_token') || '');
-          
+
             axiosInstance.defaults.headers['Authorization'] = `Bearer ${data.access}`;
             originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
-          
-            console.log('Orijinal istek yeniden yapılıyor:', originalRequest);
-          
+
             return axiosInstance(originalRequest);
           } catch (err) {
             console.error('Token yenileme hatası:', err);
@@ -47,7 +43,6 @@ const useAxios = () => {
             return Promise.reject(err);
           }
         }
-
         return Promise.reject(error);
       }
     );
@@ -57,5 +52,4 @@ const useAxios = () => {
 
   return instance;
 };
-
 export default useAxios;

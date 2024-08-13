@@ -17,7 +17,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onUpload }) => {
       bgSize="contain"
       bgPosition="center"
       bgRepeat="no-repeat"
-      opacity={0.5}
+      opacity={0.7}
       flexDirection="column" // Butonu alt alta yerleştirmek için flexDirection ekledik
     >
       <Text

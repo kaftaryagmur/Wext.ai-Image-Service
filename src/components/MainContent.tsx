@@ -25,7 +25,13 @@ const MainContent: React.FC<MainContentProps> = ({
     console.log("Search Keywords:", searchKeywords);
     console.log("Selected Photos:", selectedPhotos);
     console.log("Show Empty State:", showEmptyState);
-  }, [searchKeywords, selectedPhotos, showEmptyState]);
+    
+    if (searchKeywords.length === 0 && selectedPhotos.length === 0) {
+      setShowEmptyState(true);
+    } else {
+      setShowEmptyState(false);
+    }
+  }, [searchKeywords, selectedPhotos]);
 
   const handleSelectedPhotosChange = (photos: any[]) => {
     setSelectedPhotos(photos);
@@ -35,7 +41,7 @@ const MainContent: React.FC<MainContentProps> = ({
     console.log("Handle Search Triggered with Keywords:", keywords);
     onSearch(keywords);
     if (keywords.length > 0) {
-      setShowEmptyState(false); // Arama yapıldığında EmptyState'i gizle
+      setShowEmptyState(false);
     }
   };
 
@@ -43,12 +49,11 @@ const MainContent: React.FC<MainContentProps> = ({
   if (!isAuthenticated) return null;
 
   return (
-    
     <Flex direction="column" height="100vh">
       <Head><title>Main</title></Head>
       <Header onSearch={handleSearch} />
       <Box flex="1" display="flex">
-        {showEmptyState && searchKeywords.length === 0 && selectedPhotos.length === 0 ? (
+        {showEmptyState ? (
           <EmptyState />
         ) : (
           <>
@@ -56,6 +61,7 @@ const MainContent: React.FC<MainContentProps> = ({
               <SearchResults
                 keywords={searchKeywords}
                 onSelectedPhotosChange={handleSelectedPhotosChange}
+                setShowEmptyState={setShowEmptyState} // Bu fonksiyonu prop olarak geçiriyoruz
               />
             )}
             {selectedPhotos.length > 0 && (

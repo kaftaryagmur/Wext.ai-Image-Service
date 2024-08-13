@@ -5,6 +5,8 @@ import {
   Image,
   Text,
   Checkbox,
+  Badge,
+  VStack,
 } from "@chakra-ui/react";
 import useAxios from "@/hooks/useAxios";
 import LoadingScreen from "./LoadingScreen";
@@ -12,6 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 interface SearchResultsProps {
   keywords: string[];
   onSelectedPhotosChange: (photos: any[]) => void;
+  setShowEmptyState: (value: boolean) => void; // Yeni prop tanımı
 }
 
 interface Photo {
@@ -23,6 +26,7 @@ interface Photo {
 const SearchResults = ({
   keywords,
   onSelectedPhotosChange,
+  setShowEmptyState, // Yeni prop'u alıyoruz
 }: SearchResultsProps) => {
   const [images, setImages] = useState<{ [key: string]: Photo[] }>({});
   const [loading, setLoading] = useState(false);
@@ -34,9 +38,12 @@ const SearchResults = ({
     const fetchImages = async () => {
       setLoading(true);
       try {
+        console.log("Fetching images for keywords:", keywords);
         const response = await axiosInstance.post("/getphotos/", {
           queries: keywords,
         });
+
+        console.log("Response from backend:", response.data);
 
         const photosByQuery: { [key: string]: Photo[] } = {};
         response.data.forEach((photo: any) => {
@@ -51,6 +58,12 @@ const SearchResults = ({
         });
 
         setImages(photosByQuery);
+        console.log("Images state updated:", photosByQuery);
+        
+        // Fotoğraflar başarıyla getirildiyse EmptyState'i gizle
+        if (Object.keys(photosByQuery).length > 0) {
+          setShowEmptyState(false); // Callback fonksiyonunu çağırıyoruz
+        }
       } catch (err) {
         setError("Failed to fetch images");
         console.error("Error fetching images:", err);
@@ -62,7 +75,7 @@ const SearchResults = ({
     if (keywords.length > 0) {
       fetchImages();
     }
-  }, [keywords, axiosInstance]);
+  }, [keywords, axiosInstance, setShowEmptyState]);
 
   useEffect(() => {
     onSelectedPhotosChange(selectedPhotos);
@@ -80,7 +93,24 @@ const SearchResults = ({
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
-    <Box p={4}>
+    <VStack spacing={4} align="stretch" p={4}>
+      {/* Seçilen fotoğrafların özeti */}
+      {selectedPhotos.length > 0 && (
+        <Box borderWidth="1px" borderRadius="lg" p={4} mb={4}>
+          <Text fontSize="lg" fontWeight="bold">
+            Selected Photos:
+          </Text>
+          <SimpleGrid columns={[2, 3, 4]} spacing={2} mt={2}>
+            {selectedPhotos.map((photo, index) => (
+              <Badge key={index} colorScheme="teal" p={2}>
+                {photo.photographer}
+              </Badge>
+            ))}
+          </SimpleGrid>
+        </Box>
+      )}
+      
+      {/* Arama sonuçları */}
       <SimpleGrid columns={[1, 2, 3]} spacing={4}>
         {Object.keys(images).map((keyword) => (
           <Box
@@ -101,6 +131,8 @@ const SearchResults = ({
                   boxSize="250px"
                   objectFit="cover"
                   onClick={() => handlePhotoSelect(photo)}
+                  cursor="pointer" // Görsel tıklanabilir hale geliyor
+                  _hover={{ opacity: 0.8 }} // Hover sırasında görselin opaciti'si düşüyor
                 />
                 <Checkbox
                   position="absolute"
@@ -118,7 +150,7 @@ const SearchResults = ({
           </Box>
         ))}
       </SimpleGrid>
-    </Box>
+    </VStack>
   );
 };
 
