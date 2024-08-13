@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
 // Django backend URL'i
-const DJANGO_LOGIN_URL = 'http:/20.52.97.229:8000/api/login/';
+const DJANGO_LOGIN_URL = 'https://wextaiblob.germanywestcentral.cloudapp.azure.com/api/login/';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
