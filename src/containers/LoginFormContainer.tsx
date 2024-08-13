@@ -25,7 +25,7 @@ const LoginFormContainer = () => {
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: async ({ username, password }: LoginVariables) => {
       const response = await axios.post(
-        "http://192.168.5.103:8000/api/login/",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/login/`, // Base URL'yi .env dosyasından alıyoruz
         {
           username,
           password,

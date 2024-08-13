@@ -10,15 +10,18 @@ import {
 import axios from "axios";
 import { useAuth } from "@/components/AuthProvider";
 import LoadingScreen from "./LoadingScreen";
+
 interface SearchResultsProps {
   keywords: string[];
   onSelectedPhotosChange: (photos: any[]) => void;
 }
+
 interface Photo {
   photo_url: string;
   photographer: string;
   query: string;
 }
+
 const SearchResults = ({
   keywords,
   onSelectedPhotosChange,
@@ -28,12 +31,13 @@ const SearchResults = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([]);
   const { token } = useAuth();
+
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
       try {
         const response = await axios.post(
-          "http://192.168.5.103:8000/api/getphotos/",
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/getphotos/`, // Base URL'yi .env dosyasından alıyoruz
           { queries: keywords },
           {
             headers: {
@@ -41,6 +45,7 @@ const SearchResults = ({
             },
           }
         );
+
         const photosByQuery: { [key: string]: Photo[] } = {};
         response.data.forEach((photo: any) => {
           if (!photosByQuery[photo.query]) {
@@ -60,13 +65,16 @@ const SearchResults = ({
         setLoading(false);
       }
     };
+
     if (keywords.length > 0) {
       fetchImages();
     }
   }, [keywords, token]);
+
   useEffect(() => {
     onSelectedPhotosChange(selectedPhotos);
   }, [selectedPhotos, onSelectedPhotosChange]);
+
   const handlePhotoSelect = (photo: Photo) => {
     setSelectedPhotos((prevSelected) =>
       prevSelected.some((p) => p.photo_url === photo.photo_url)
@@ -74,8 +82,10 @@ const SearchResults = ({
         : [...prevSelected, photo]
     );
   };
-  if (loading) return <LoadingScreen/>;
+
+  if (loading) return <LoadingScreen />;
   if (error) return <Text color="red.500">{error}</Text>;
+
   return (
     <Box p={4}>
       <SimpleGrid columns={[1, 2, 3]} spacing={4}>
@@ -117,4 +127,5 @@ const SearchResults = ({
     </Box>
   );
 };
+
 export default SearchResults;

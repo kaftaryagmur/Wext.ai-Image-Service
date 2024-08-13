@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import SearchResults from "@/components/SearchResults";
 import SelectedPhotosContainer from "@/containers/SelectedPhotosContainer";
@@ -38,7 +38,9 @@ const MainContent: React.FC<MainContentProps> = ({
 
   return (
     <Flex direction="column" height="100vh">
-      <Head><title>Main</title></Head>
+      <Head>
+        <title>Main</title>
+      </Head>
       <Header onSearch={handleSearch} />
       <Box flex="1" display="flex">
         {searchKeywords.length > 0 ? (
@@ -52,8 +54,36 @@ const MainContent: React.FC<MainContentProps> = ({
             )}
           </>
         ) : (
-          <Box flex="1" display="flex" alignItems="center" justifyContent="center">
-            <p>No search results yet. Please enter keywords to search.</p>
+          <Box
+            flex="1"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            position="relative"  
+          >
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height="100%"
+              width="100%"
+              bgImage="url('/images/background.png')" 
+              bgSize="cover"
+              bgPosition="center"
+              opacity={0.4}
+              position="absolute"  
+            />
+            <Box 
+              zIndex={1}  
+              p={8}
+              bg="rgba(201, 182, 200, 0.7)"  
+              borderRadius="md"
+              boxShadow="lg"
+              maxWidth="600px"
+              textAlign="center"
+            >
+              <Text fontWeight="bold">No search results yet. Please upload a csv file to search.</Text>
+            </Box>
           </Box>
         )}
       </Box>

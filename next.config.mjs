@@ -4,7 +4,7 @@ export default {
     return [
       {
         source: "/api/:path*",
-        destination: "http://192.168.5.103:8000/:path*", // Django backend adresi
+        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL}/:path*`, // Django backend adresi
       },
     ];
   },

@@ -1,9 +1,10 @@
-//front-end ile back-end arasında veri alışverişi sağlar
 import axios from "axios";
-export const fetchPhotos = async (query: string, p0: string): Promise<string[]> => {
+
+//front-end ile back-end arasında veri alışverişi sağlar
+export const fetchPhotos = async (query: string): Promise<string[]> => {
   try {
     const response = await axios.get(
-      `http://192.168.5.103:8000/api/getphotos/`, // Endpoint URL'sini buraya yazın
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/getphotos/`, // Endpoint URL'sini .env dosyasından alıyoruz
       {
         params: {
           search: query,

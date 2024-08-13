@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.5.103:8000/api/getphotos/';
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL + '/getphotos/'; // URL'yi .env dosyasından alıyoruz
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

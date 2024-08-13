@@ -8,7 +8,7 @@ const useAxios = () => {
 
   useEffect(() => {
     const axiosInstance = axios.create({
-      baseURL: 'http://192.168.5.103:8000/api',
+      baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Base URL'yi .env dosyasından alıyoruz
       headers: {
         Authorization: token ? `Bearer ${token}` : '',
       },
@@ -24,7 +24,7 @@ const useAxios = () => {
 
           try {
             const { data } = await axios.post(
-              'http://192.168.5.103:8000/api/token/refresh',
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/token/refresh`, // Refresh endpoint URL'sini .env dosyasından alıyoruz
               {
                 refresh: localStorage.getItem('refresh_token'),
               }
