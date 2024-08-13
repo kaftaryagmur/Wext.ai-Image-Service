@@ -2,7 +2,7 @@
   "name": "login-project",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://wextaiblob.germanywestcentral.cloudapp.azure.com/",
+  "proxy": "http://192.168.5.103:8000/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

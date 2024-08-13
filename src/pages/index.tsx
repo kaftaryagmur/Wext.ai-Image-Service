@@ -1,8 +1,8 @@
 import { Button, VStack, Text, Image, Box, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import HowToUse from "../components/HowToUse"; // Yeni bileşeni içe aktarın
-import { Link } from "react-scroll"; // react-scroll kütüphanesini içe aktarın
+import HowToUse from "../components/HowToUse";
+import { Link } from "react-scroll"; 
 import ScrollToTopButton from "@/components/ScrollToUpButton";
 
 const HomePage = () => {

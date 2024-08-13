@@ -3,7 +3,7 @@ import axios from "axios";
 export const fetchPhotos = async (query: string, p0: string): Promise<string[]> => {
   try {
     const response = await axios.get(
-      `https://wextaiblob.germanywestcentral.cloudapp.azure.com/api/getphotos/`, // Endpoint URL'sini buraya yazın
+      `http://192.168.5.103:8000/api/getphotos/`, // Endpoint URL'sini buraya yazın
       {
         params: {
           search: query,

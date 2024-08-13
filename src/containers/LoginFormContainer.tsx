@@ -25,7 +25,7 @@ const LoginFormContainer = () => {
   const mutation = useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: async ({ username, password }: LoginVariables) => {
       const response = await axios.post(
-        "https://wextaiblob.germanywestcentral.cloudapp.azure.com/api/login/",
+        "http://192.168.5.103:8000/api/login/",
         {
           username,
           password,

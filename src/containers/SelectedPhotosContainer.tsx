@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Box, Flex, Text, Spinner, SimpleGrid, Image, Checkbox } from "@chakra-ui/react";
 import useAxios from "@/hooks/useAxios";
-import EmptyState from "@/components/EmptyState";
 
 const SelectedPhotosContainer = ({
   selectedPhotos,
@@ -54,7 +53,9 @@ const SelectedPhotosContainer = ({
           {error}
         </Text>
       ) : selectedPhotos.length === 0 ? (
-        <EmptyState onUpload={handleUpload} />
+        <Text color="gray.500" textAlign="center" fontSize="lg">
+          No photos selected. Please select photos to submit.
+        </Text>
       ) : (
         <>
           <SimpleGrid columns={[3, 4, 5]} spacing={4} mb={4}>
