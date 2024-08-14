@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
 // Django backend URL'i
-const DJANGO_LOGIN_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/login/`; // URL'yi .env dosyasından alıyoruz
+const DJANGO_LOGIN_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/login/`; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
