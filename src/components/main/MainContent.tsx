@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import Header from "./Header";
 import SearchResults from "./SearchResults";
-import SelectedPhotosContainer from "@/containers/main/SelectedPhotosContainer";
-import { useAuth } from "@/components/AuthProvider";
+import SelectedPhotosContainer from "../../containers/main/SelectedPhotosContainer";
+import { useAuth } from "../AuthProvider";
 import LoadingScreen from "../LoadingScreen";
 import Head from "next/head";
 

@@ -11,7 +11,7 @@ import {
 import { FormEvent, useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { SearchIcon } from "@chakra-ui/icons";
-import useAxios from "@/hooks/useAxios";
+import useAxios from "../../hooks/useAxios";
 
 interface SearchBarProps {
   onSearch: (photos: string[]) => void; // Fotoğraf URL'leri geri gönderilecek

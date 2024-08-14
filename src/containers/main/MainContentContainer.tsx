@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "../../components/AuthProvider";
 import { useRouter } from "next/router";
-import MainContent from "@/components/main/MainContent";
+import MainContent from "../../components/main/MainContent";
 
 const MainContentContainer = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();

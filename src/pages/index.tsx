@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import HowToUse from "../components/HowToUse";
 import { Link } from "react-scroll"; 
-import ScrollToTopButton from "@/components/ScrollToUpButton";
+import ScrollToTopButton from "../components/ScrollToUpButton";
 
 const HomePage = () => {
   const router = useRouter();

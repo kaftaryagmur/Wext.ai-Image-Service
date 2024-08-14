@@ -30,7 +30,7 @@ RUN npm install --production
 COPY --from=builder /app/.next /app/.next
 COPY --from=builder /app/public /app/public
 COPY --from=builder /app/node_modules /app/node_modules
-COPY --from=builder /app/next.config.js /app/next.config.js
+COPY --from=builder /app/next.config.mjs /app/next.config.mjs
 COPY --from=builder /app/package.json /app/package.json
 
 # Uygulamayı başlat

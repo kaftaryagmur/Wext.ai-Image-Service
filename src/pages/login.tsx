@@ -1,4 +1,4 @@
-import { AuthProvider } from "@/components/AuthProvider";
+import { AuthProvider } from "../components/AuthProvider";
 import Login from "../login/page";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
