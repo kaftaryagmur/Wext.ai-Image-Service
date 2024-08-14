@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
-import Header from "../components/Header";
-import MainContentContainer from "../containers/MainContentContainer";
+import Header from "@/components//main/Header";
+import MainContentContainer from "@/containers/main/MainContentContainer";
 import PrivateRoute from "@/components/PrivateRoute";
 import Head from "next/head";
 

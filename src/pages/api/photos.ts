@@ -6,8 +6,6 @@ export const fetchPhotos = async (query: string): Promise<{ [key: string]: strin
     throw new Error('No token found');
   }
 
-  console.log('Sending token:', token); // Hata ayıklama için token'ı loglayın
-
   const response = await axios.get('/api/getphotos/', {
     params: { query },
     headers: {

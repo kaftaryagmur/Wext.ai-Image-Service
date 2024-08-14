@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
-import { useAuth } from "../components/AuthProvider";
+import { Box } from "@chakra-ui/react";
+import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/router";
-import MainContent from "../components/MainContent";
+import MainContent from "@/components/main/MainContent";
 
 const MainContentContainer = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [searchKeywords, setSearchKeywords] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<any[]>([]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -17,17 +17,17 @@ const MainContentContainer = () => {
     }
   }, [isAuthenticated, authLoading, router]);
 
-  const handleSearch = (keywords: string[]) => {
-    setSearchKeywords(keywords);
+  const handleSearch = (newPhotos: any[]) => {
+    setPhotos([...newPhotos]); // spread operatörüyle array kopyası oluşturup setPhotos'a geçiyoruz
   };
+
 
   if (authLoading) return null;
   if (!isAuthenticated) return null;
 
   return (
     <Box>
-      
-      <MainContent onSearch={handleSearch} searchKeywords={searchKeywords} />
+      <MainContent onSearch={handleSearch} photos={photos} />
     </Box>
   );
 };

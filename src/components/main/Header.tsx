@@ -1,6 +1,7 @@
 import { Box, Flex, Button, Image, Spacer, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
+import { useEffect } from "react";
 
 interface HeaderProps {
   onSearch: (keywords: string[]) => void;
@@ -13,7 +14,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     localStorage.removeItem("token");
     router.push("/");
   };
-
+  useEffect(() => {
+    console.log("Header rendered");
+  });
   return (
     <Box bg="#e7ecf8" p={4} boxShadow="md">
       <Flex

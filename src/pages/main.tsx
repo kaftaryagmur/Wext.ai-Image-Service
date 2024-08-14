@@ -2,7 +2,7 @@
 
 import React from "react";
 import { AuthProvider } from "@/components/AuthProvider";
-import MainContentContainer from "@/containers/MainContentContainer";
+import MainContentContainer from "@/containers/main/MainContentContainer";
 import PrivateRoute from "@/components/PrivateRoute";
 
 const MainPage = () => {

@@ -153,7 +153,6 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
                 width="30%"
                 type="submit"
                 isLoading={loading}
-                loadingText="Logging in..."
                 spinner={<BeatLoader size={8} color="white" />}
               >
                 {loading ? "" : "Login"}

@@ -8,13 +8,13 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { FormEvent, useState, useCallback } from "react";
+import { FormEvent, useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { SearchIcon } from "@chakra-ui/icons";
 import useAxios from "@/hooks/useAxios";
 
 interface SearchBarProps {
-  onSearch: (queries: string[]) => void;
+  onSearch: (photos: string[]) => void; // Fotoğraf URL'leri geri gönderilecek
 }
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
@@ -29,6 +29,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       setFile(acceptedFiles[0]); // Dosya seçildiğinde file state güncellenir
     }
   }, []);
+
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -45,15 +46,21 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       formData.append("file", file);
 
       try {
+        // CSV dosyasını backend'e yüklüyoruz
         const response = await axiosInstance.post("/csvfileupload/", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
 
-        console.log("Search Keywords from Response:", response.data.queries);
-        onSearch(response.data.queries); // Arama sonuçlarını üst bileşene gönderiyoruz
+        const searchKeywords = response.data.queries;
 
+        const photosResponse = await axiosInstance.post("/getphotos/", {
+          queries: searchKeywords,
+        });
+
+        const photos = photosResponse.data; 
+        onSearch(photos); 
         toast({
           title: "File uploaded successfully.",
           description: `File: ${file.name} has been processed.`,
@@ -64,11 +71,12 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
 
         setFile(null); // Dosya yüklemesi başarılı, file state sıfırlanır
       } catch (err) {
-        setError("Failed to upload file");
+        setError("Failed to upload file or fetch photos");
         console.error("Error:", err);
         toast({
-          title: "File upload failed.",
-          description: "There was an error uploading your file.",
+          title: "Operation failed.",
+          description:
+            "There was an error uploading your file or fetching photos.",
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -91,6 +99,9 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   const dropzoneBg = useColorModeValue("#f0f4f8", "#2d3748");
   const dropzoneHoverBg = useColorModeValue("#e1e5e9", "#4a5568");
 
+  useEffect(() => {
+    console.log("SearchBar rendered");
+  });
   return (
     <Box
       as="form"

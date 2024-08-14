@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Button, Input, Text } from "@chakra-ui/react";
 
@@ -41,7 +41,9 @@ const CsvUpload = () => {
       setUploading(false);
     }
   };
-
+  useEffect(() => {
+    console.log("CsvUpload rendered");
+  });
   return (
     <Box>
       <Input type="file" onChange={handleFileChange} />

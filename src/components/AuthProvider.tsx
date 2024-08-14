@@ -52,14 +52,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [router]);
 
   const login = (access: string, refresh: string) => {
-    console.log("Login token:", access);
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
     setIsAuthenticated(true);
     setToken(access);
     router
       .push("/main")
-      .then(() => console.log("Navigated to main"))
       .catch((err) => console.error("Navigation error:", err));
   };
 

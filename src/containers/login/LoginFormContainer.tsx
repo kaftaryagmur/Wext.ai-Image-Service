@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useAuth } from "../components/AuthProvider";
-import LoginForm from "@/components/LoginForm";
+import { useAuth } from "../../components/AuthProvider";
+import LoginForm from "@/components/login/LoginForm";
 import { Box, Text } from "@chakra-ui/react";
 
 interface LoginResponse {
