@@ -8,6 +8,7 @@ import {
   Alert,
   AlertIcon,
   Badge,
+  Flex,
 } from "@chakra-ui/react";
 
 interface Photo {
@@ -56,7 +57,7 @@ const SearchResults = ({
           </Badge>
         </Box>
       )}
-      <SimpleGrid columns={[1, 2, 3]} spacing={4}>
+      <SimpleGrid columns={[1, 2, 3]} spacing={6} pb="248px">
         {photos.map((photo, index) => (
           <Box
             key={index}
@@ -64,38 +65,49 @@ const SearchResults = ({
             borderRadius="lg"
             overflow="hidden"
             position="relative"
-            p={2}
+            boxShadow="md"
+            transition="transform 0.2s, box-shadow 0.2s"
+            _hover={{
+              transform: "scale(1.05)",
+              boxShadow: "lg",
+            }}
           >
-            <Text fontSize="md" fontWeight="bold" mb={2}>
-              {photo.query}
-            </Text>
-            <Box position="relative" mb={2}>
-              <Image
-                src={photo.photo_url}
-                alt={`${photo.query} image`}
-                borderRadius="md"
-                boxSize="250px"
-                objectFit="cover"
-                onClick={() => handlePhotoSelect(photo)}
-                cursor="pointer"
-                opacity={
-                  selectedPhotos.some((p) => p.photo_url === photo.photo_url)
-                    ? 0.6
-                    : 1
-                }
-                _hover={{ opacity: 0.8 }}
-              />
-              <Checkbox
-                position="absolute"
-                bottom="5px"
-                right="5px"
-                colorScheme="teal"
-                size="lg"
-                isChecked={selectedPhotos.some(
-                  (p) => p.photo_url === photo.photo_url
-                )}
-                onChange={() => handlePhotoSelect(photo)}
-              />
+            <Image
+              src={photo.photo_url}
+              alt={`${photo.query} image`}
+              borderRadius="md"
+              width="100%"
+              height="200px"
+              objectFit="cover"
+              cursor="pointer"
+              onClick={() => handlePhotoSelect(photo)}
+              opacity={
+                selectedPhotos.some((p) => p.photo_url === photo.photo_url)
+                  ? 0.6
+                  : 1
+              }
+              _hover={{ opacity: 0.8 }}
+            />
+            <Checkbox
+              position="absolute"
+              top="5px"
+              right="5px"
+              colorScheme="teal"
+              size="lg"
+              isChecked={selectedPhotos.some(
+                (p) => p.photo_url === photo.photo_url
+              )}
+              onChange={() => handlePhotoSelect(photo)}
+            />
+            <Box p={4}>
+              <Flex justifyContent="space-between" alignItems="center">
+                <Text fontSize="lg" fontWeight="bold">
+                  {photo.query}
+                </Text>
+                <Badge colorScheme="blue" variant="solid">
+                  {photo.photographer}
+                </Badge>
+              </Flex>
             </Box>
           </Box>
         ))}

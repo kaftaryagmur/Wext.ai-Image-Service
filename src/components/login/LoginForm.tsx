@@ -40,8 +40,9 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
     }
   };
 
-  const leftWidth = useBreakpointValue({ base: "100%", md: "60%" });
+  const leftWidth = useBreakpointValue({ base: "0%", md: "60%" });
   const rightWidth = useBreakpointValue({ base: "100%", md: "40%" });
+  const showLeftSide = useBreakpointValue({ base: "none", md: "flex" });
 
   useEffect(() => {
     document.body.style.overflow = "hidden"; // Hide scrollbar
@@ -62,9 +63,9 @@ const LoginForm = ({ onSubmit, errorMessage }: LoginFormProps) => {
 
       {/* Sol Taraf: Tanıtım Görseli */}
       <Box
+        display={showLeftSide} // Mobilde gizlenmesini sağlamak için
         flexBasis={leftWidth}
         bg="#e7ecf8"
-        display="flex"
         flexDirection="column"
         alignItems="center"
         justifyContent="center"

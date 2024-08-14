@@ -71,7 +71,7 @@ const MainContent: React.FC<MainContentProps> = ({ onSearch, photos }) => {
             <Box
               zIndex={1}
               p={8}
-              bg="rgba(201, 182, 200, 0.7)"
+              bg="rgba(201, 182, 250, 0.7)"
               borderRadius="md"
               boxShadow="lg"
               maxWidth="600px"
