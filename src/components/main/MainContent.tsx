@@ -21,16 +21,13 @@ const MainContent: React.FC<MainContentProps> = ({ onSearch, photos }) => {
   };
 
   const handleSearch = (photos: any[]) => {
-    console.log("Handle Search Triggered with Photos:", photos);
     onSearch(photos);
   };
 
   if (authLoading) return <LoadingScreen />;
   if (!isAuthenticated) return null;
 
-  useEffect(() => {
-    console.log("MainContent rendered");
-  });
+
   return (
     <Flex direction="column" height="100vh">
       <Head>

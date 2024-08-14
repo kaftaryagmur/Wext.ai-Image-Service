@@ -14,9 +14,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     localStorage.removeItem("token");
     router.push("/");
   };
-  useEffect(() => {
-    console.log("Header rendered");
-  });
+
   return (
     <Box bg="#e7ecf8" p={4} boxShadow="md">
       <Flex

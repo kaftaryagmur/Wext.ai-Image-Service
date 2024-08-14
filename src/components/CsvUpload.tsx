@@ -41,9 +41,7 @@ const CsvUpload = () => {
       setUploading(false);
     }
   };
-  useEffect(() => {
-    console.log("CsvUpload rendered");
-  });
+
   return (
     <Box>
       <Input type="file" onChange={handleFileChange} />

@@ -21,7 +21,10 @@ interface SearchResultsProps {
   onSelectedPhotosChange: (photos: Photo[]) => void;
 }
 
-const SearchResults = ({ photos, onSelectedPhotosChange }: SearchResultsProps) => {
+const SearchResults = ({
+  photos,
+  onSelectedPhotosChange,
+}: SearchResultsProps) => {
   const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([]);
 
   useEffect(() => {
@@ -44,9 +47,6 @@ const SearchResults = ({ photos, onSelectedPhotosChange }: SearchResultsProps) =
       </Alert>
     );
 
-    useEffect(() => {
-      console.log("SearchResults rendered");
-    });
   return (
     <Box p={4}>
       {selectedPhotos.length > 0 && (

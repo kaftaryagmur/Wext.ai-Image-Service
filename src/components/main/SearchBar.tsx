@@ -99,9 +99,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   const dropzoneBg = useColorModeValue("#f0f4f8", "#2d3748");
   const dropzoneHoverBg = useColorModeValue("#e1e5e9", "#4a5568");
 
-  useEffect(() => {
-    console.log("SearchBar rendered");
-  });
+
   return (
     <Box
       as="form"

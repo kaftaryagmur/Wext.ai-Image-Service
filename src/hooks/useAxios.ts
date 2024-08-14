@@ -1,55 +1,59 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/components/AuthProvider';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/components/AuthProvider";
+
+export const apiClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  headers: { "Content-Type": "application/json" },
+});
 
 const useAxios = () => {
-  const { token, logout, login } = useAuth();
-  const [instance, setInstance] = useState(() => axios.create());
+  const { token } = useAuth();
+
+  const refresh = async () => {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/token/refresh`,
+      {
+        refresh: localStorage.getItem("refresh_token"),
+      }
+    );
+
+    localStorage.setItem("access_token", data.access);
+    return data.access;
+  };
 
   useEffect(() => {
-    const axiosInstance = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Base URL'yi .env dosyasından alıyoruz
-      headers: {
-        Authorization: token ? `Bearer ${token}` : '',
+    const requestIntercept = apiClient.interceptors.request.use(
+      (config) => {
+        if (!config.headers["Authorization"]) {
+          config.headers["Authorization"] = token ? `Bearer ${token}` : "";
+        }
+        return config;
       },
-    });
+      (error) => Promise.reject(error)
+    );
 
-    axiosInstance.interceptors.response.use(
-      response => response,
-      async error => {
-        const originalRequest = error.config;
-
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-
-          try {
-            const { data } = await axios.post(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/token/refresh`, // Refresh endpoint URL'sini .env dosyasından alıyoruz
-              {
-                refresh: localStorage.getItem('refresh_token'),
-              }
-            );
-
-            localStorage.setItem('access_token', data.access);
-            login(data.access, localStorage.getItem('refresh_token') || '');
-
-            axiosInstance.defaults.headers['Authorization'] = `Bearer ${data.access}`;
-            originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
-
-            return axiosInstance(originalRequest);
-          } catch (err) {
-            console.error('Token yenileme hatası:', err);
-            logout();
-            return Promise.reject(err);
-          }
+    const responseIntercept = apiClient.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const prevRequest = error?.config;
+        if (error?.response?.status === 401 && !prevRequest?.sent) {
+          prevRequest.sent = true;
+          const newAccessToken = await refresh();
+          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          localStorage.setItem("access_token", newAccessToken);
+          return apiClient(prevRequest);
         }
         return Promise.reject(error);
       }
     );
 
-    setInstance(() => axiosInstance);
-  }, [token, logout, login]);
+    return () => {
+      apiClient.interceptors.request.eject(requestIntercept);
+      apiClient.interceptors.response.eject(responseIntercept);
+    };
+  }, []);
 
-  return instance;
+  return apiClient;
 };
 export default useAxios;

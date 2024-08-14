@@ -5,9 +5,6 @@ import PrivateRoute from "@/components/PrivateRoute";
 import Head from "next/head";
 
 const MainPage = () => {
-  const handleSearch = (keywords: string[]) => {
-    console.log("Arama kelimeleri:", keywords);
-  };
 
   return (
     <Box>
@@ -15,7 +12,7 @@ const MainPage = () => {
         <title>Main</title>
       </Head>
       <PrivateRoute>
-        <Header onSearch={handleSearch} />
+        {/* <Header onSearch={handleSearch} /> */}
         <MainContentContainer />
       </PrivateRoute>
     </Box>
